@@ -4,3 +4,10 @@ tamaño ventanas medianas = 700 x 650
 tamaño letras grandes = 25
 
 tamaño letras medianas = 15
+
+colores:
+fondo: #292828
+letreros fondo: #61433f
+color de letra letrero: #ffffff
+ingreso de datos: #ffffff
+botones: #515670
