@@ -15,7 +15,7 @@ class MenuPrincipal(QMainWindow):
         self.setWindowTitle("Menu Principal")
 
         # ponemos color de fondo a la ventana
-        self.setStyleSheet("background-color: #e6ebe0")
+        self.setStyleSheet("background-color: #292828")
 
         # Ancho y alto de la ventana
         self.ancho = 700
@@ -49,16 +49,10 @@ class MenuPrincipal(QMainWindow):
         self.layoutSalirLogo = QHBoxLayout()
         self.salirYLogo.setLayout(self.layoutSalirLogo)
 
-        # boton salir
-        self.iconoSalir = self.style().standardIcon(QStyle.SP_ArrowBack)
-        self.botonSalir = QPushButton(self.iconoSalir, "Salir")
-        self.botonSalir.setStyleSheet("border-radius: 15px; background-color: #9bc1bc; margin-left: 35px; margin-right: 150px; margin-bottom: 150px;")
-        self.botonSalir.setFont(QFont("Arial", 25))
-        self.layoutSalirLogo.addWidget(self.botonSalir)
-
         # imagen logo
         self.labelLogo = QLabel()
         self.logo = QPixmap('imagenes/logoSausage.png')
+        self.labelLogo.setStyleSheet("margin-left: 50px;")
         self.labelLogo.setFixedHeight(200)
         self.labelLogo.setPixmap(self.logo)
         self.labelLogo.setAlignment(Qt.AlignHCenter)
@@ -66,7 +60,16 @@ class MenuPrincipal(QMainWindow):
         self.layoutSalirLogo.addWidget(self.labelLogo)
         self.verticalCentral.addWidget(self.salirYLogo)
 
-        # creamos el menu Principal
+        # boton salir
+        self.iconoSalir = self.style().standardIcon(QStyle.SP_ArrowBack)
+        self.botonSalir = QPushButton(self.iconoSalir, "Salir")
+        self.botonSalir.setStyleSheet("border-radius: 15px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+        self.botonSalir.setFont(QFont("Arial", 25))
+        self.layoutSalirLogo.addWidget(self.botonSalir)
+
+
+
+        """# creamos el menu Principal
         self.letreroMenuPrincipal = QLabel()
         # texto de letreroInicioSesion
         self.letreroMenuPrincipal.setText("Menu Principal")
@@ -79,7 +82,7 @@ class MenuPrincipal(QMainWindow):
         #centrar el texto
         self.letreroMenuPrincipal.setAlignment(Qt.AlignCenter)
         # agregamos el letreroMenuPrincipal al layout principal
-        self.verticalCentral.addWidget(self.letreroMenuPrincipal)
+        self.verticalCentral.addWidget(self.letreroMenuPrincipal)"""
 #-----------------------------------------------------------------------------------------------------------------------
         # imagen de productos y menu principal
         self.productosYMenu = QWidget()
