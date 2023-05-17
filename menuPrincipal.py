@@ -4,8 +4,10 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QWidget, QVBoxLayout, QLabel, QFormLayout, \
     QLineEdit, QPushButton, QHBoxLayout, QStyle
-
 from historialPedidos import VentanaHistorialPedidos
+from realizarPedido import RealizarPedido
+
+
 class MenuPrincipal(QMainWindow):
 
     def __init__(self, anterior):
@@ -114,6 +116,7 @@ class MenuPrincipal(QMainWindow):
         self.botonRealizarPedido = QPushButton(self.iconoPedido, "Realizar Pedido")
         self.botonRealizarPedido.setStyleSheet("border-radius: 5px; background-color: #ed6a5a; margin-left: 30px; margin-right: 30px; margin-bottom: 10px;")
         self.botonRealizarPedido.setFont(QFont("Arial", 15))
+        self.botonRealizarPedido.clicked.connect(self.accion_botonRealizarPedido)
         self.layoutMenuPrincipal.addRow(self.botonRealizarPedido)
 
         # boton HistorialPedidos
@@ -164,6 +167,11 @@ class MenuPrincipal(QMainWindow):
 
 
 
+
+    def accion_botonRealizarPedido(self):
+        self.hide()
+        self.realizarPedido = RealizarPedido(self)
+        self.realizarPedido.show()
 
 
 if __name__ == '__main__':

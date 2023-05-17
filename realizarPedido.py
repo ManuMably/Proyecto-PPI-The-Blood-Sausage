@@ -9,8 +9,11 @@ from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QVBoxLayout, Q
 
 class RealizarPedido(QMainWindow):
 
-    def __init__(self, parent=None):
-        super(RealizarPedido, self).__init__(parent)
+    def __init__(self, menuPrincipal=None):
+        super(RealizarPedido, self).__init__(menuPrincipal)
+
+        # creamos un atributo que guarde la ventatana anterior menuPrincipal
+        self.menuPrincipal = menuPrincipal
 
         # Titulo de la ventana
         self.setWindowTitle("Realizar pedido")
@@ -304,7 +307,8 @@ class RealizarPedido(QMainWindow):
         self.central.setLayout(self.verticalCentral)
 
     def accion_botonVolver(self):
-        pass
+        self.hide()
+        self.menuPrincipal.show()
 
 if __name__ == '__main__':
     # hacer que la aplicacion se genere
