@@ -4,18 +4,22 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QWidget, QVBoxLayout, QLabel, QFormLayout, \
     QLineEdit, QPushButton, QHBoxLayout, QStyle
+from historialPedidos import VentanaHistorialPedidos
+from realizarPedido import RealizarPedido
 
 
 class MenuPrincipal(QMainWindow):
 
-    def __init__(self, parent=None):
-        super(MenuPrincipal, self).__init__(parent)
+    def __init__(self, anterior):
+        super(MenuPrincipal, self).__init__(anterior)
+
+        self.ventanaAnterior = anterior
 
         # Titulo de la ventana
         self.setWindowTitle("Menu Principal")
 
         # ponemos color de fondo a la ventana
-        self.setStyleSheet("background-color: #e6ebe0")
+        self.setStyleSheet("background-color: #292828")
 
         # Ancho y alto de la ventana
         self.ancho = 700
@@ -49,16 +53,10 @@ class MenuPrincipal(QMainWindow):
         self.layoutSalirLogo = QHBoxLayout()
         self.salirYLogo.setLayout(self.layoutSalirLogo)
 
-        # boton salir
-        self.iconoSalir = self.style().standardIcon(QStyle.SP_ArrowBack)
-        self.botonSalir = QPushButton(self.iconoSalir, "Salir")
-        self.botonSalir.setStyleSheet("border-radius: 15px; background-color: #9bc1bc; margin-left: 35px; margin-right: 150px; margin-bottom: 150px;")
-        self.botonSalir.setFont(QFont("Arial", 25))
-        self.layoutSalirLogo.addWidget(self.botonSalir)
-
         # imagen logo
         self.labelLogo = QLabel()
         self.logo = QPixmap('imagenes/logoSausage.png')
+        self.labelLogo.setStyleSheet("margin-left: 50px;")
         self.labelLogo.setFixedHeight(200)
         self.labelLogo.setPixmap(self.logo)
         self.labelLogo.setAlignment(Qt.AlignHCenter)
@@ -66,7 +64,18 @@ class MenuPrincipal(QMainWindow):
         self.layoutSalirLogo.addWidget(self.labelLogo)
         self.verticalCentral.addWidget(self.salirYLogo)
 
-        # creamos el menu Principal
+        # boton Volver
+        self.botonVolver = QPushButton("volver")
+        self.botonVolver.setStyleSheet("border-radius: 15px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+        self.botonVolver.setFont(QFont("Arial", 25))
+        # ponemos el boton volver a funcionar
+        self.botonVolver.clicked.connect(self.accion_botonVolver)
+        # lo agregamos
+        self.layoutSalirLogo.addWidget(self.botonVolver)
+
+
+
+        """# creamos el menu Principal
         self.letreroMenuPrincipal = QLabel()
         # texto de letreroInicioSesion
         self.letreroMenuPrincipal.setText("Menu Principal")
@@ -79,7 +88,7 @@ class MenuPrincipal(QMainWindow):
         #centrar el texto
         self.letreroMenuPrincipal.setAlignment(Qt.AlignCenter)
         # agregamos el letreroMenuPrincipal al layout principal
-        self.verticalCentral.addWidget(self.letreroMenuPrincipal)
+        self.verticalCentral.addWidget(self.letreroMenuPrincipal)"""
 #-----------------------------------------------------------------------------------------------------------------------
         # imagen de productos y menu principal
         self.productosYMenu = QWidget()
@@ -107,6 +116,7 @@ class MenuPrincipal(QMainWindow):
         self.botonRealizarPedido = QPushButton(self.iconoPedido, "Realizar Pedido")
         self.botonRealizarPedido.setStyleSheet("border-radius: 5px; background-color: #ed6a5a; margin-left: 30px; margin-right: 30px; margin-bottom: 10px;")
         self.botonRealizarPedido.setFont(QFont("Arial", 15))
+        self.botonRealizarPedido.clicked.connect(self.accion_botonRealizarPedido)
         self.layoutMenuPrincipal.addRow(self.botonRealizarPedido)
 
         # boton HistorialPedidos
@@ -114,6 +124,8 @@ class MenuPrincipal(QMainWindow):
         self.botonHistorialPedidos = QPushButton(self.iconoHistorial, "Historial Pedidos")
         self.botonHistorialPedidos.setStyleSheet("border-radius: 5px; background-color: #ed6a5a; margin-left: 30px; margin-right: 30px; margin-bottom: 10px;")
         self.botonHistorialPedidos.setFont(QFont("Arial", 15))
+        # metodo botonHistorialPedidos
+        self.botonHistorialPedidos.clicked.connect(self.accion_botonHistorialPedidos)
         self.layoutMenuPrincipal.addRow(self.botonHistorialPedidos)
 
         # boton Clientes
@@ -139,13 +151,27 @@ class MenuPrincipal(QMainWindow):
         # agregamos el formulario al verticalCentral
         self.verticalCentral.addWidget(self.productosYMenu)
 
-
-
-
-
-
+        # -------------------------poner al ultimo del constructor-------------------------
         # establecemos verticalCentral como layout del centralInicioSesion
         self.centralInicioSesion.setLayout(self.verticalCentral)
+
+    def accion_botonVolver(self):
+        self.hide()
+        self.ventanaAnterior.show()
+
+    def accion_botonHistorialPedidos(self):
+            self.hide()
+            self.historialP = VentanaHistorialPedidos(self)
+            self.historialP.show()
+
+
+
+
+
+    def accion_botonRealizarPedido(self):
+        self.hide()
+        self.realizarPedido = RealizarPedido(self)
+        self.realizarPedido.show()
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ class IniciarSesion(QMainWindow):
         self.setWindowTitle("Inicio de Sesion")
 
         # ponemos color de fondo a la ventana
-        self.setStyleSheet("background-color: #e6ebe0")
+        self.setStyleSheet("background-color: #292828")
 
         # Ancho y alto de la ventana
         self.ancho = 700
@@ -60,7 +60,7 @@ class IniciarSesion(QMainWindow):
         # tipo de letra del letrero
         self.letreroInicioSesion.setFont(QFont("Arial", 25))
         # estilo del letreto
-        self.letreroInicioSesion.setStyleSheet("color: black;")
+        self.letreroInicioSesion.setStyleSheet("color: #ffffff;")
         self.letreroInicioSesion.setFixedHeight(100)
         #centrar el texto
         self.letreroInicioSesion.setAlignment(Qt.AlignCenter)
@@ -78,13 +78,13 @@ class IniciarSesion(QMainWindow):
         # tipo de letra del letrero
         self.labelUsuario.setFont(QFont("Arial", 15))
         # estilo label
-        self.labelUsuario.setStyleSheet("background-color: #ffffff; margin-left: 230px; margin-right: 230px ;color: #000000; border: solid; border-width: 1px;"
+        self.labelUsuario.setStyleSheet("background-color: #61433f; margin-left: 230px; margin-right: 230px ;color: #ffffff; border: solid; border-width: 1px;"
                                         "border-color: #000000; border-radius: 7px; margin-bottom:5px;")
         self.labelUsuario.setAlignment(Qt.AlignCenter)
         self.layoutInicioSesion.addRow(self.labelUsuario)
         # espacio para el ingreso del usuario
         self.ingresoUsuario = QLineEdit()
-        self.ingresoUsuario.setStyleSheet("background-color: #ed6a5a; margin-left:200px; margin-right: 200px ;color: #000000; border: solid; border-width: 1px;"
+        self.ingresoUsuario.setStyleSheet("background-color: #ffffff; margin-left:200px; margin-right: 200px ;color: #000000; border: solid; border-width: 1px;"
                                         "border-color: #000000; border-radius: 7px;margin-bottom:10px;")
         self.layoutInicioSesion.addRow(self.ingresoUsuario)
 
@@ -93,13 +93,13 @@ class IniciarSesion(QMainWindow):
         # tipo de letra del letrero
         self.labelContrasena.setFont(QFont("Arial", 15))
         # estilo label
-        self.labelContrasena.setStyleSheet("background-color: #ffffff; margin-left: 230px; margin-right: 230px ;color: #000000; border: solid; border-width: 1px;"
+        self.labelContrasena.setStyleSheet("background-color: #61433f; margin-left: 230px; margin-right: 230px ;color: #ffffff; border: solid; border-width: 1px;"
                                         "border-color: #000000; border-radius: 7px;margin-bottom:5px;")
         self.labelContrasena.setAlignment(Qt.AlignCenter)
         self.layoutInicioSesion.addRow(self.labelContrasena)
         # espacio para ingreso de contraseña
         self.ingresoContrasena = QLineEdit()
-        self.ingresoContrasena.setStyleSheet("background-color: #ed6a5a; margin-left:200px; margin-right: 200px ;color: #000000; border: solid; border-width: 1px;"
+        self.ingresoContrasena.setStyleSheet("background-color: #ffffff; margin-left:200px; margin-right: 200px ;color: #000000; border: solid; border-width: 1px;"
                                           "border-color: #000000; border-radius: 7px;margin-bottom:15px;")
         self.layoutInicioSesion.addRow(self.ingresoContrasena)
 
@@ -108,7 +108,7 @@ class IniciarSesion(QMainWindow):
         # tipo de letra del letrero
         self.botonIngresar.setFont(QFont("Arial", 13))
         # estilo del boton
-        self.botonIngresar.setStyleSheet("background-color: #36c9c6; margin-left: 200px; margin-right: 200px ;color: #000000; border: solid; border-width: 1px;"
+        self.botonIngresar.setStyleSheet("background-color: #515670; margin-left: 200px; margin-right: 200px ;color: #ffffff; border: solid; border-width: 1px;"
                                           "border-color: #000000; border-radius: 7px;")
         self.botonIngresar.clicked.connect(self.abrir)
         # agregamos el boton al formulario
@@ -132,6 +132,7 @@ class IniciarSesion(QMainWindow):
         self.centralInicioSesion.setLayout(self.verticalCentral)
 
     def abrir (self):
+        self.hide()
         self.menuPrincipal = MenuPrincipal(self)
         self.menuPrincipal.show()
 
