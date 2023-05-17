@@ -132,6 +132,7 @@ class IniciarSesion(QMainWindow):
         self.centralInicioSesion.setLayout(self.verticalCentral)
 
     def abrir (self):
+        self.hide()
         self.menuPrincipal = MenuPrincipal(self)
         self.menuPrincipal.show()
 
