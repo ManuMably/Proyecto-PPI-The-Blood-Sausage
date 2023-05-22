@@ -141,14 +141,10 @@ class MenuPrincipal(QMainWindow):
         self.botonEmpleados.clicked.connect(self.accion_botonEmpleados)
         self.layoutMenuPrincipal.addRow(self.botonClientes, self.botonEmpleados)
 
-
-
-
         # layot de menuPrincipal
         self.menuPrincipal.setLayout(self.layoutMenuPrincipal)
         # agregamos el menu a layoutProductosMenu
         self.layoutProductosMenu.addWidget(self.menuPrincipal)
-
         # agregamos el formulario al verticalCentral
         self.verticalCentral.addWidget(self.productosYMenu)
 
