@@ -60,7 +60,7 @@ class Empleados(QMainWindow):
             "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 35px; margin-right: 350px; margin-bottom: 150px;")
         self.botonVolver.setFont(QFont("Arial", 15))
         # ponemos el boton volver a funcionar
-        # self.botonVolver.clicked.connect(self.accion_botonVolver)
+        self.botonVolver.clicked.connect(self.accion_botonVolver)
         # lo agregamos
         self.layoutSalirLogo.addWidget(self.botonVolver)
 
@@ -89,20 +89,37 @@ class Empleados(QMainWindow):
 
         # ------------------------------Bloque de botones ---------------------------------------------------
         # widget para distribucion de botones registrar, cambiar, eliminar
-        self.salirYLogo = QWidget()
-        # layout para salirYLogo
-        self.layoutSalirLogo = QHBoxLayout()
-        self.salirYLogo.setLayout(self.layoutSalirLogo)
+        self.bloqueBotones = QWidget()
+        # layout para bloqueBotones
+        self.layoutBloqueBotones = QHBoxLayout()
+        self.bloqueBotones.setLayout(self.layoutBloqueBotones)
+
+        # boton registrar
+        self.botonRegistrar = QPushButton("Registrar")
+        self.botonRegistrar.setStyleSheet("border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+        self.botonRegistrar.setFont(QFont("Arial", 15))
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonRegistrar)
+
+        # boton Cambiar
+        self.botonCambiar = QPushButton("Cambiar")
+        self.botonCambiar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+        self.botonCambiar.setFont(QFont("Arial", 15))
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonCambiar)
+
+        # boton Eliminar
+        self.botonEliminar = QPushButton("Eliminar")
+        self.botonEliminar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+        self.botonEliminar.setFont(QFont("Arial", 15))
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonEliminar)
 
 
-
-
-
-
-
-
-
-
+        # agragamos el bloque de botones a la vertical central
+        self.verticalCentral.addWidget(self.bloqueBotones)
 
 
 
@@ -110,7 +127,9 @@ class Empleados(QMainWindow):
         # establecemos verticalCentral como layout del centralInicioSesion
         self.central.setLayout(self.verticalCentral)
 
-
+    def accion_botonVolver(self):
+        self.hide()
+        self.menuPrincipal.show()
 
 if __name__ == '__main__':
     # hacer que la aplicacion se genere

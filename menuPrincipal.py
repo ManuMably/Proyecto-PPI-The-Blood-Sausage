@@ -4,6 +4,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QWidget, QVBoxLayout, QLabel, QFormLayout, \
     QLineEdit, QPushButton, QHBoxLayout, QStyle
+
+from empleados import Empleados
 from historialPedidos import VentanaHistorialPedidos
 from realizarPedido import RealizarPedido
 
@@ -127,12 +129,14 @@ class MenuPrincipal(QMainWindow):
         self.botonClientes.setFont(QFont("Arial", 20))
         #self.layoutMenuPrincipal.addRow(self.botonClientes)
 
-        # boton Usuarios
-        self.iconoUsuarios = self.style().standardIcon(QStyle.SP_DialogYesButton)
-        self.botonUsuarios = QPushButton(self.iconoUsuarios, "Empleados")
-        self.botonUsuarios.setStyleSheet("border-radius: 5px; background-color: #515670; color: #ffffff; margin-left: 200px; margin-right: 0px; margin-top: 0px;")
-        self.botonUsuarios.setFont(QFont("Arial", 20))
-        self.layoutMenuPrincipal.addRow(self.botonClientes, self.botonUsuarios)
+        # boton Empleados
+        self.iconoEmpleados = self.style().standardIcon(QStyle.SP_DialogYesButton)
+        self.botonEmpleados = QPushButton(self.iconoEmpleados, "Empleados")
+        self.botonEmpleados.setStyleSheet("border-radius: 5px; background-color: #515670; color: #ffffff; margin-left: 200px; margin-right: 0px; margin-top: 0px;")
+        self.botonEmpleados.setFont(QFont("Arial", 20))
+        # metodo boton Empleados
+        self.botonEmpleados.clicked.connect(self.accion_botonEmpleados)
+        self.layoutMenuPrincipal.addRow(self.botonClientes, self.botonEmpleados)
 
 
 
@@ -174,6 +178,11 @@ class MenuPrincipal(QMainWindow):
         self.hide()
         self.realizarPedido = RealizarPedido(self)
         self.realizarPedido.show()
+
+    def accion_botonEmpleados(self):
+        self.hide()
+        self.empleados = Empleados(self)
+        self.empleados.show()
 
 
 if __name__ == '__main__':
