@@ -5,6 +5,7 @@ from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QWidget, QVBoxLayout, QLabel, QFormLayout, \
     QLineEdit, QPushButton, QHBoxLayout, QStyle
 
+from clientes import Clientes
 from empleados import Empleados
 from historialPedidos import VentanaHistorialPedidos
 from realizarPedido import RealizarPedido
@@ -127,7 +128,9 @@ class MenuPrincipal(QMainWindow):
         self.botonClientes = QPushButton(self.iconoClientes, "Clientes")
         self.botonClientes.setStyleSheet("border-radius: 5px; background-color: #515670; color: #ffffff; margin-left: 30px; margin-right: 30px; margin-bottom: 10px; margin-top: 0px;")
         self.botonClientes.setFont(QFont("Arial", 20))
-        #self.layoutMenuPrincipal.addRow(self.botonClientes)
+        # metodo botonClientes
+        self.botonClientes.clicked.connect(self.accion_botonClientes)
+
 
         # boton Empleados
         self.iconoEmpleados = self.style().standardIcon(QStyle.SP_DialogYesButton)
@@ -164,25 +167,22 @@ class MenuPrincipal(QMainWindow):
     def accion_botonVolver(self):
         self.hide()
         self.ventanaAnterior.show()
-
     def accion_botonHistorialPedidos(self):
             self.hide()
             self.historialP = VentanaHistorialPedidos(self)
             self.historialP.show()
-
-
-
-
-
     def accion_botonRealizarPedido(self):
         self.hide()
         self.realizarPedido = RealizarPedido(self)
         self.realizarPedido.show()
-
     def accion_botonEmpleados(self):
         self.hide()
         self.empleados = Empleados(self)
         self.empleados.show()
+    def accion_botonClientes(self):
+        self.hide()
+        self.clientes = Clientes(self)
+        self.clientes.show()
 
 
 if __name__ == '__main__':
