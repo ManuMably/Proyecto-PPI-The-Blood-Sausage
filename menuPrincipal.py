@@ -94,7 +94,7 @@ class MenuPrincipal(QMainWindow):
         self.productosYMenu = QWidget()
         self.layoutProductosMenu = QHBoxLayout()
         self.productosYMenu.setLayout(self.layoutProductosMenu)
-
+        self.productosYMenu.setStyleSheet("background-color: #81858c; border-radius: 10px;")
 
 
 
@@ -129,7 +129,7 @@ class MenuPrincipal(QMainWindow):
 
         # boton Usuarios
         self.iconoUsuarios = self.style().standardIcon(QStyle.SP_DialogYesButton)
-        self.botonUsuarios = QPushButton(self.iconoUsuarios, "Usuarios")
+        self.botonUsuarios = QPushButton(self.iconoUsuarios, "Empleados")
         self.botonUsuarios.setStyleSheet("border-radius: 5px; background-color: #515670; color: #ffffff; margin-left: 200px; margin-right: 0px; margin-top: 0px;")
         self.botonUsuarios.setFont(QFont("Arial", 20))
         self.layoutMenuPrincipal.addRow(self.botonClientes, self.botonUsuarios)
