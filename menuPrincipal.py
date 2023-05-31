@@ -25,7 +25,7 @@ class MenuPrincipal(QMainWindow):
         self.setStyleSheet("background-color: #292828")
 
         # Ancho y alto de la ventana
-        self.ancho = 700
+        self.ancho = 1100
         self.alto = 650
 
         # Asignamos el tamaño de ancho y alto a la ventana

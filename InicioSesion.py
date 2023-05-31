@@ -3,8 +3,11 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QWidget, QVBoxLayout, QLabel, QFormLayout, \
-    QLineEdit, QPushButton
+    QLineEdit, QPushButton, QDialog, QDialogButtonBox, QMessageBox
 from PyQt5 import uic, QtWidgets
+from PyQt5.uic.properties import QtCore
+
+from empleado import Empleado
 from menuPrincipal import MenuPrincipal
 
 
@@ -128,13 +131,91 @@ class IniciarSesion(QMainWindow):
 
 
 
+
         # establecemos verticalCentral como layout del centralInicioSesion
         self.centralInicioSesion.setLayout(self.verticalCentral)
 
     def abrir (self):
-        self.hide()
-        self.menuPrincipal = MenuPrincipal(self)
-        self.menuPrincipal.show()
+
+        # variable para controlar que se han ingresado datos correctos
+        self.datosCorrectos = True
+
+        # validar que se haya ingresado el usuario
+        if(self.ingresoUsuario.text() == ''):
+            self.datosCorrectos = False
+            # mensaje por error en los datos ingresados
+            self.alerta = QMessageBox()
+            self.alerta.setIcon(QMessageBox.Warning)
+            self.alerta.setWindowTitle("Alerta")
+            self.alerta.setText("Para ingresar debes poner un usuario y contraseña.")
+            self.alerta.setStandardButtons(QMessageBox.Ok)
+            self.alerta.exec_()
+
+        if(self.datosCorrectos):
+            # abrimos el archivo en modo lectura
+            self.file = open('archivos_planos/empleadosRegistrados.txt', 'rb')
+
+            # lista vacia para guardar los empleados
+            empleados = []
+
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+
+                # obtenemos del string una lista de 3 datos separados por ;
+                lista = linea.split(";")
+
+                # se para si ya no hay registros en el archivo
+                if linea == '':
+                    break
+
+                # creamos un objeto tipo empleado llamado e
+                e = Empleado(lista[0], lista[1], lista[2])
+
+                # metemos el objeto en la lista empleados
+                empleados.append(e)
+
+            # cerramos el archivo
+            self.file.close()
+
+            # ya tenemos la lista con todos los empleados
+
+            # variable para controlar si el empleado existe
+            existeEmpleado= False
+
+            # Buscamos en la lista empleado por empleado si existe el nombreEmpleado
+            for e in empleados:
+
+                # comparamos el usuario ingresado
+                # si corresponde con nombreEmpleado, es el empleado correcto
+                if (e.nombreEmpleado == self.ingresoUsuario.text() and e.contrasena == self.ingresoContrasena.text()):
+
+                    print("se ha ingresado el usuario y contraseña correcto")
+                    self.hide()
+                    self.menuPrincipal = MenuPrincipal(self)
+                    self.menuPrincipal.show()
+
+                    # indicamos que encontramos el usuario
+                    existeEmpleado = True
+
+                    # paramos el for
+                    break
+
+            # si no existe el usuario
+            if(not existeEmpleado):
+                # mensaje por que no se encuentra el empleado registrado
+                self.alerta = QMessageBox()
+                self.alerta.setIcon(QMessageBox.Warning)
+                self.alerta.setWindowTitle("Alerta")
+                self.alerta.setText("El empleado no se encuentra registrado o has escrito mal el usuario y contraseña.")
+                self.alerta.setStandardButtons(QMessageBox.Ok)
+                self.alerta.exec_()
+
+
+
+
+
+        """"""
+
 
 
 if __name__ == '__main__':
