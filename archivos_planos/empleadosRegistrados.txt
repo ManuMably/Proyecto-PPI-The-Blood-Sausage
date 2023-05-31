@@ -1,0 +1,2 @@
+RoyerPin;morcilla;administrador
+YhoimerSalas;amadoHoyos;administrador
