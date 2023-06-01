@@ -3,8 +3,10 @@ import sys
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QFont
-from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QVBoxLayout, QLabel, QApplication, QHBoxLayout, \
-    QStyle, QPushButton, QLineEdit, QFormLayout
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QScrollArea, QTableWidget, QVBoxLayout, QLabel, QApplication, QHBoxLayout, \
+    QStyle, QTableWidgetItem, QPushButton, QLineEdit, QFormLayout
+
+from cliente import Cliente
 
 class Clientes(QMainWindow):
 
@@ -76,7 +78,89 @@ class Clientes(QMainWindow):
         self.verticalCentral.addWidget(self.salirYLogo)
 
         # ------------------------------- Bloque donde ira la tabla ----------------------------------------
-        # imagen logo
+
+        # Abrimos el archivo en modo de lectura:
+        self.file = open('archivos_planos/clientes.txt', 'rb')
+
+        # lista vacia para guardar los usuarios:
+        self.usuarios = []
+
+        # recorremos el archivo, linea por linea:
+        while self.file:
+
+            linea = self.file.readline().decode('UTF-8')
+
+            # obtenemos del string una lista con 11 datos separados por;
+            lista = linea.split(";")
+            # Separa si ya no hay mas registros en el archivo
+            if linea == '':
+                break
+            # Creamos un objeto tipo cliente llamado u
+            u = Cliente(
+                lista[0],
+                lista[1],
+                lista[2],
+            )
+            # Metemos el objeto en la lista de usuarios:
+            self.usuarios.append(u)
+
+        # Cerramos el archivo:
+        self.file.close()
+
+        # En este punto tenemos la lista usuarios con todos los usuarios
+
+        # Obtenemos el numero de usuarios registrados:
+        # Consultamos el tamano de la lista usuarios:
+        self.numeroUsuarios = len(self.usuarios)
+
+        # Contador de elementos para controlar a los usuarios en la tabla:
+        self.contador = 0
+
+        # Creamos un scroll:
+        self.scrollArea = QScrollArea()
+
+        # Hacemos Que el scroll se adapte a diferentes tamanos:
+        self.scrollArea.setWidgetResizable(True)
+
+        # Creamos una tabla:
+        self.tabla = QTableWidget()
+
+        # definimos el numero de columnas que tendra la tabla:
+        self.tabla.setColumnCount(3)
+
+        # definimos el ancho de cada columna:
+        self.tabla.setColumnWidth(0, 410)
+        self.tabla.setColumnWidth(1, 410)
+        self.tabla.setColumnWidth(2, 250)
+
+        # Definimos el texto de la cabecera:
+        self.tabla.setHorizontalHeaderLabels(['Nombre',
+                                              'Direccion',
+                                              'Celular'])
+
+        # Establecemos el numero de filas:
+        self.tabla.setRowCount(self.numeroUsuarios)
+
+        # Llenamos la tabla:
+        for u in self.usuarios:
+            self.tabla.setItem(self.contador, 0, QTableWidgetItem(u.nombreCompleto))
+            # Hacemos que el nombre no se pueda editar:
+            self.tabla.item(self.contador, 0).setFlags(Qt.ItemIsEnabled)
+            self.tabla.setItem(self.contador, 1, QTableWidgetItem(u.direccion))
+            self.tabla.setItem(self.contador, 2, QTableWidgetItem(u.celular))
+            self.contador += 1
+
+        # Aplicar hoja de estilo a la tabla
+        self.tabla.setStyleSheet("QTableWidget { background-color: white; }")
+
+        # Metemos la tabla en el scroll:
+        self.scrollArea.setWidget(self.tabla)
+
+        # Metemos en el layout vertical el scroll:
+        self.verticalCentral.addWidget(self.scrollArea)
+
+
+        '''# imagen logo
         self.labeTablaEmpleados = QLabel()
         self.logo = QPixmap('imagenes/ejemploTabla.PNG')
         self.labeTablaEmpleados.setStyleSheet("")
@@ -85,7 +169,7 @@ class Clientes(QMainWindow):
         self.labeTablaEmpleados.setAlignment(Qt.AlignHCenter)
         # agregamos la imagen al layout principal
         #self.layoutSalirLogo.addWidget(self.labelTablaEmpleados)
-        self.verticalCentral.addWidget(self.labeTablaEmpleados)
+        self.verticalCentral.addWidget(self.labeTablaEmpleados)'''
 
         # ------------------------------Bloque de botones ---------------------------------------------------
         # widget para distribucion de botones registrar, cambiar, eliminar
