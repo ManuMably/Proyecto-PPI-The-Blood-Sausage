@@ -11,3 +11,13 @@ letreros fondo: #61433f
 color de letra letrero: #ffffff
 ingreso de datos: #ffffff
 botones: #515670
+
+la ventana de realizar pedido debe guardar la siguiente informacion
+
+nombre cliente
+celular
+direccion
+morcilla cantidad
+chorizo cantidad
+arroz de cerdo cantidad
+estado del pedido por defecto = pendiente
