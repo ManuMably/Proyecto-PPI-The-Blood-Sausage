@@ -158,10 +158,11 @@ class Clientes(QMainWindow):
         # Metemos en el layout vertical el scroll:
         self.verticalCentral.addWidget(self.scrollArea)
 
-        # ________________MENU TOOLBAR_______________________________
+        """# ________________MENU TOOLBAR_______________________________
 
         self.toolbar = QToolBar('Main toolbar')
-        self.toolbar.setIconSize(QSize(32, 32))
+        self.toolbar.setIconSize(QSize(92, 92))
+        self.toolbar.setStyleSheet("margin-left: 50px;")
         self.addToolBar(self.toolbar)
 
         # ---------- add ---------
@@ -179,7 +180,46 @@ class Clientes(QMainWindow):
         self.delete.triggered.connect(self.accion_delete)
         self.toolbar.addAction(self.delete)
 
-        self.verticalCentral.addWidget(self.toolbar)
+        self.verticalCentral.addWidget(self.toolbar)"""
+        # ------------------------------Bloque de botones ---------------------------------------------------
+        # widget para distribucion de botones registrar, cambiar, eliminar
+        self.bloqueBotones = QWidget()
+        # layout para bloqueBotones
+        self.layoutBloqueBotones = QHBoxLayout()
+        self.bloqueBotones.setLayout(self.layoutBloqueBotones)
+
+        # boton registrar
+        self.botonRegistrar = QPushButton("Agregar")
+        self.botonRegistrar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+        self.botonRegistrar.setFont(QFont("Arial", 15))
+        # ponemos el boton Agregar a funcionar
+        self.botonRegistrar.clicked.connect(self.accion_add)
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonRegistrar)
+
+        # boton Cambiar
+        self.botonCambiar = QPushButton("Actualizar")
+        self.botonCambiar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+        self.botonCambiar.setFont(QFont("Arial", 15))
+        # ponemos el boton actualizar a funcionar
+        self.botonCambiar.clicked.connect(self.accion_insert)
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonCambiar)
+
+        # boton Eliminar
+        self.botonEliminar = QPushButton("Eliminar")
+        self.botonEliminar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+        self.botonEliminar.setFont(QFont("Arial", 15))
+        # ponemos el boton Eliminar a funcionar
+        self.botonEliminar.clicked.connect(self.accion_delete)
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonEliminar)
+
+        # agragamos el bloque de botones a la vertical central
+        self.verticalCentral.addWidget(self.bloqueBotones)
 
         # poner al ultimo
         # establecemos verticalCentral como layout del centralInicioSesion
