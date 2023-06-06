@@ -13,7 +13,7 @@ from realizarPedido import RealizarPedido
 
 class MenuPrincipal(QMainWindow):
 
-    def __init__(self, anterior):
+    def __init__(self, anterior=None):
         super(MenuPrincipal, self).__init__(anterior)
 
         self.ventanaAnterior = anterior
