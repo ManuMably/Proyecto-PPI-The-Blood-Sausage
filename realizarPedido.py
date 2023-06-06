@@ -48,35 +48,45 @@ class RealizarPedido(QMainWindow):
         # definimos layout de la ventana central
         self.verticalCentral = QVBoxLayout()
 
-        # cramos un layout horizontal para el boton volver y el logo
-        self.horizontalVolverLogo = QHBoxLayout()
+        # ---------------------------bloque de boton salir y logo
+        # widget para distribucion
+        self.salirYLogo = QWidget()
+        # layout para salirYLogo
+        self.layoutSalirLogo = QHBoxLayout()
+        self.salirYLogo.setLayout(self.layoutSalirLogo)
 
-        # boton volver
-        self.iconoSalir = self.style().standardIcon(QStyle.SP_ArrowBack)
-        self.botonVolver = QPushButton(self.iconoSalir, "Volver")
-        self.botonVolver.setStyleSheet("border-radius: 15px; background-color: #515670;"
-            "color: #FFFFFF; margin-left: 35px; margin-right: 200px; margin-bottom: 10px;")
+        # boton Volver
+        self.botonVolver = QPushButton("Volver")
+        self.botonVolver.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 300px; margin-bottom: 150px;")
         self.botonVolver.setFont(QFont("Arial", 15))
-        self.botonVolver.setFixedWidth(400)
+        # ponemos el boton volver a funcionar
         self.botonVolver.clicked.connect(self.accion_botonVolver)
-        self.horizontalVolverLogo.addWidget(self.botonVolver)
-
-        self.horizontalVolverLogo.addStretch()
+        # lo agregamos
+        self.layoutSalirLogo.addWidget(self.botonVolver)
 
         # imagen logo
         self.labelLogo = QLabel()
         self.logo = QPixmap('imagenes/logoSausage.png')
-        self.labelLogo.setScaledContents(True)
-        self.labelLogo.setFixedHeight(80)
-        self.labelLogo.setFixedWidth(300)
+        self.labelLogo.setStyleSheet("margin-left: 50px;")
+        self.labelLogo.setFixedHeight(200)
         self.labelLogo.setPixmap(self.logo)
         self.labelLogo.setAlignment(Qt.AlignHCenter)
-        self.horizontalVolverLogo.addWidget(self.labelLogo)
+        # agregamos la imagen al layout principal
+        self.layoutSalirLogo.addWidget(self.labelLogo)
+        self.verticalCentral.addWidget(self.salirYLogo)
 
-        self.verticalCentral.addLayout(self.horizontalVolverLogo)
+        # ---------------- fin bloque salir y logo
 
-        # creamos un layout para datos del cliente y pedido
+        # ------------ bloque horizontal para datos de clientes,limpiar y datos de pedido --------------------------
+        self.datosClientePedido = QWidget()
+        self.layoutDatosClientePedido = QHBoxLayout()
+        self.datosClientePedido.setLayout(self.layoutDatosClientePedido)
+
+        # ---------------creamos un layout para datos del cliente y boton limpiar-------
+        self.datosCliente = QWidget()
         self.formularioDatosPedido = QFormLayout()
+        self.datosCliente.setLayout(self.formularioDatosPedido)
 
         # creamos el letrero nombre del cliente
         self.letreroCliente = QLabel()
@@ -122,11 +132,7 @@ class RealizarPedido(QMainWindow):
         # agregamos el letrero al layout formularioDatosPedido
         self.formularioDatosPedido.addRow(self.letreroCelular, self.celularCliente)
 
-        # agregamos el layout horozontal al layout principal
-        self.verticalCentral.addLayout(self.formularioDatosPedido)
-        self.verticalCentral.setSpacing(20)
-
-        # hacemos el boton para buscar preguntas
+        # hacemos el boton para limpiar
         self.botonlimpiar = QPushButton("Reiniciar Orden")
 
         # establecemos el ancho del boton
@@ -144,8 +150,18 @@ class RealizarPedido(QMainWindow):
 
         self.formularioDatosPedido.addRow(self.botonlimpiar)
 
+
+        self.layoutDatosClientePedido.addWidget(self.datosCliente)
+
+
+        # -------------------------- fin formulario nombre, celular y reiniciar orden --------------------
+
+
+
         # hacemos el layout para las imagenes y letreros de precios
+        self.datosProductos = QWidget()
         self.horizontalProductos = QHBoxLayout()
+        self.datosProductos.setLayout(self.horizontalProductos)
 
         self.producto1 = QVBoxLayout()
 
@@ -165,7 +181,7 @@ class RealizarPedido(QMainWindow):
 
         # creamos el letrero para el precio
         self.precioMorcilla = QLabel()
-        self.precioMorcilla.setText("15000")
+        self.precioMorcilla.setText("Morcilla")
         self.precioMorcilla.setFont(QFont("Arial", 10))
         self.precioMorcilla.setStyleSheet("background-color: #61433f; margin-left: 20px;"
                                           "color: #FFFFFF; border: solid;"
@@ -215,7 +231,7 @@ class RealizarPedido(QMainWindow):
 
         # creamos el letrero para el precio
         self.precioChorizo = QLabel()
-        self.precioChorizo.setText("18000")
+        self.precioChorizo.setText("Chorizo")
         self.precioChorizo.setFont(QFont("Arial", 10))
         self.precioChorizo.setStyleSheet("background-color: #61433f; margin-left: 20px;"
                                          ";color: #FFFFFF; border: solid;"
@@ -232,7 +248,7 @@ class RealizarPedido(QMainWindow):
         self.botonAgregar2 = QPushButton()
         self.botonAgregar2.setText("+")
         self.botonAgregar2.setStyleSheet("border-radius: 15px; background-color: #515670;"
-                                         "color: #FFFFFF;margin-left: 20px;"
+                                         "color: #FFFFFF;margin-left: 10px;"
                                          "margin-bottom: 10px;")
         self.botonAgregar2.setFixedWidth(60)
         self.botonAgregar2.setFixedHeight(60)
@@ -241,7 +257,7 @@ class RealizarPedido(QMainWindow):
         self.botonDisminuir2 = QPushButton()
         self.botonDisminuir2.setText("-")
         self.botonDisminuir2.setStyleSheet("border-radius: 15px; background-color: #515670;"
-                                           "color: #FFFFFF; margin-left: 20px;"
+                                           "color: #FFFFFF; margin-left: 10px;"
                                            "margin-bottom: 10px;")
         self.botonDisminuir2.setFixedWidth(60)
         self.botonDisminuir2.setFixedHeight(60)
@@ -255,7 +271,7 @@ class RealizarPedido(QMainWindow):
         # creamos un label para la imagen
         self.imagenArroz = QLabel()
         self.imagen3 = QPixmap('imagenes/arroz.jpg')
-        self.imagenArroz.setStyleSheet("margin-left: 20px;")
+        self.imagenArroz.setStyleSheet("margin-left: 10px;")
         self.imagenArroz.setScaledContents(True)
         self.imagenArroz.setFixedWidth(150)
         self.imagenArroz.setFixedHeight(150)
@@ -265,7 +281,7 @@ class RealizarPedido(QMainWindow):
 
         # creamos el letrero para el precio
         self.precioArroz = QLabel()
-        self.precioArroz.setText("12000")
+        self.precioArroz.setText("Arroz de Cerdo")
         self.precioArroz.setFont(QFont("Arial", 10))
         self.precioArroz.setStyleSheet("background-color: #61433f; margin-left: 20px;"
                                        "color: #FFFFFF; border: solid;"
@@ -302,7 +318,9 @@ class RealizarPedido(QMainWindow):
 
         #   |self.horizontalProductos.addStretch()
 
-        self.verticalCentral.addLayout(self.horizontalProductos)
+        self.layoutDatosClientePedido.addWidget(self.datosProductos)
+        self.verticalCentral.addWidget(self.datosClientePedido)
+
 
 
 
