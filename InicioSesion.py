@@ -102,6 +102,7 @@ class IniciarSesion(QMainWindow):
         self.layoutInicioSesion.addRow(self.labelContrasena)
         # espacio para ingreso de contraseña
         self.ingresoContrasena = QLineEdit()
+        self.ingresoContrasena.setEchoMode(QLineEdit.Password)
         self.ingresoContrasena.setStyleSheet("background-color: #ffffff; margin-left:200px; margin-right: 200px ;color: #000000; border: solid; border-width: 1px;"
                                           "border-color: #000000; border-radius: 7px;margin-bottom:15px;")
         self.layoutInicioSesion.addRow(self.ingresoContrasena)
