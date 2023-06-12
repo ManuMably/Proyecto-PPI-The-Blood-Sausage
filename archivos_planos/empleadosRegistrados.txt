@@ -1,4 +1,4 @@
 RoyerPin;morcilla;administrador
-YhoimerSalas;amadoHoyos;administrador
+YhoimerSalas;AmadoHoyos;administrador
 Guillermina;morcilla2;Administrador
 alberto;mi123;mensajero
