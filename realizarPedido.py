@@ -6,6 +6,9 @@ from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QVBoxLayout, QLabel, QApplication, QHBoxLayout, \
     QStyle, QPushButton, QLineEdit, QFormLayout, QMessageBox
 
+from cliente import Cliente
+from pedido import Pedido
+
 
 class RealizarPedido(QMainWindow):
 
@@ -163,6 +166,7 @@ class RealizarPedido(QMainWindow):
                                         "border-radius: 15px;margin-bottom:5px;")
 
         self.botonGuardar.setFont(QFont("Arial", 15))
+        self.botonGuardar.clicked.connect(self.accion_guardarPedido)
         self.formularioDatosPedido.addRow(self.botonGuardar)
 
 
@@ -195,7 +199,7 @@ class RealizarPedido(QMainWindow):
 
         # self.producto1.addStretch()
 
-        # creamos el letrero para el precio
+        # creamos el letrero para el nombre
         self.nombreMorcilla = QLabel()
         self.nombreMorcilla.setText("Morcilla")
         self.nombreMorcilla.setFont(QFont("Arial", 15))
@@ -430,6 +434,91 @@ class RealizarPedido(QMainWindow):
         else:
             disminucionCantidad = cantidadActual - 1
             self.cantidadProducto3.setText(str(disminucionCantidad))
+
+    def accion_guardarPedido(self):
+        # variable para controlar que se han ingresado datos correctos
+        self.datosCorrectos = True
+
+        # validar que se haya ingresado el cliente
+        if (self.nombreCliente.text() == ''):
+            self.datosCorrectos = False
+            # mensaje por error en los datos ingresados
+            self.alerta = QMessageBox()
+            self.alerta.setIcon(QMessageBox.Warning)
+            self.alerta.setWindowTitle("Alerta")
+            self.alerta.setText("Para registrar el pedido debes poner un cliente y celular validos.")
+            self.alerta.setStandardButtons(QMessageBox.Ok)
+            self.alerta.exec_()
+
+        if (self.datosCorrectos):
+            # abrimos el archivo en modo lectura
+            self.file = open('archivos_planos/clientes.txt', 'rb')
+
+            # lista vacia para guardar los clientes
+            clientes = []
+
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+
+                # obtenemos del string una lista de 3 datos separados por ;
+                lista = linea.split(";")
+
+                # se para si ya no hay registros en el archivo
+                if linea == '':
+                    break
+
+                # creamos un objeto tipo cliente llamado c
+                c = Cliente(lista[0], lista[1], lista[2])
+
+                # metemos el objeto en la lista clientes
+                clientes.append(c)
+
+            # cerramos el archivo
+            self.file.close()
+
+            # ya tenemos la lista con todos los clientes
+
+            # variable para ver si existe el cliente
+            existeCliente = False
+
+            for c in clientes:
+                if (c.nombreCompleto == self.nombreCliente.text() and c.celular.strip() == self.celularCliente.text().strip()):
+                    print("el cliente existe")
+                    pedido =[]
+
+                    p = Pedido(c.nombreCompleto, c.direccion, c.celular, self.cantidadProducto1.text(), self.cantidadProducto2.text(), self.cantidadProducto3.text(), "pendiente")
+                    print(p)
+                    pedido.append(p)
+
+                    self.file = open('archivos_planos/pedidos.txt', 'ab')
+                    for p in pedido:
+                        self.file.write(bytes(p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
+                    self.file.close()
+                    return QMessageBox.question(self,
+                                                'Confirmacion',
+                                                'Se ha guardado el pedido exitosamente.',
+                                                QMessageBox.StandardButton.Ok
+                                                )
+
+
+                    existeCliente = True
+                    break
+
+            if (not existeCliente):
+                # mensaje por que no se encuentra el empleado registrado
+                self.alerta = QMessageBox()
+                self.alerta.setIcon(QMessageBox.Warning)
+                self.alerta.setWindowTitle("Alerta")
+                self.alerta.setText("El cliente no se encuentra registrado o has escrito mal el nombre y celular.")
+                self.alerta.setStandardButtons(QMessageBox.Ok)
+                self.alerta.exec_()
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

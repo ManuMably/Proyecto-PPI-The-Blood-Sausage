@@ -213,12 +213,6 @@ class IniciarSesion(QMainWindow):
 
 
 
-
-
-        """"""
-
-
-
 if __name__ == '__main__':
     # hacer que la aplicacion se genere
     app = QApplication(sys.argv)
