@@ -158,29 +158,7 @@ class Clientes(QMainWindow):
         # Metemos en el layout vertical el scroll:
         self.verticalCentral.addWidget(self.scrollArea)
 
-        """# ________________MENU TOOLBAR_______________________________
 
-        self.toolbar = QToolBar('Main toolbar')
-        self.toolbar.setIconSize(QSize(92, 92))
-        self.toolbar.setStyleSheet("margin-left: 50px;")
-        self.addToolBar(self.toolbar)
-
-        # ---------- add ---------
-        self.add = QAction(QIcon('imagenes/iconos/add.png'), '&Crear', self)
-        self.add.triggered.connect(self.accion_add)
-        self.toolbar.addAction(self.add)
-
-        # ---------- insert ------------
-        self.insert = QAction(QIcon('imagenes/iconos/edit.png'), '&Editar', self)
-        self.insert.triggered.connect(self.accion_insert)
-        self.toolbar.addAction(self.insert)
-
-        # -------------- delete ----------
-        self.delete = QAction(QIcon('imagenes/iconos/delete.png'), '&Eliminar', self)
-        self.delete.triggered.connect(self.accion_delete)
-        self.toolbar.addAction(self.delete)
-
-        self.verticalCentral.addWidget(self.toolbar)"""
         # ------------------------------Bloque de botones ---------------------------------------------------
         # widget para distribucion de botones registrar, cambiar, eliminar
         self.bloqueBotones = QWidget()

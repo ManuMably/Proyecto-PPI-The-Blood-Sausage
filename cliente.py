@@ -10,4 +10,4 @@ class Cliente:
         self.celular = celular
 
     def __str__(self):
-        return f"Nombre: {self.nombreCompleto} Celular: {self.celular}"
+        return f"Nombre: {self.nombreCompleto} Direccion: {self.direccion} Celular: {self.celular}"
