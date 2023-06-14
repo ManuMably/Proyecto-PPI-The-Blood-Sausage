@@ -3,12 +3,14 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QWidget, QVBoxLayout, QLabel, QFormLayout, \
-    QLineEdit, QPushButton, QHBoxLayout, QStyle
+    QLineEdit, QPushButton, QHBoxLayout, QStyle, QMessageBox
 
 from clientes import Clientes
 from empleados import Empleados
 from historialPedidos import VentanaHistorialPedidos
 from realizarPedido import RealizarPedido
+
+
 
 
 class MenuPrincipal(QMainWindow):
@@ -17,6 +19,8 @@ class MenuPrincipal(QMainWindow):
         super(MenuPrincipal, self).__init__(anterior)
 
         self.ventanaAnterior = anterior
+
+        self.perfilEmpleado = anterior.perfilIngreso
 
         # Titulo de la ventana
         self.setWindowTitle("Menu Principal")
@@ -196,6 +200,7 @@ class MenuPrincipal(QMainWindow):
     def accion_botonVolver(self):
         self.hide()
         self.ventanaAnterior.show()
+
     def accion_botonHistorialPedidos(self):
             self.hide()
             self.historialP = VentanaHistorialPedidos(self)
@@ -205,13 +210,18 @@ class MenuPrincipal(QMainWindow):
         self.realizarPedido = RealizarPedido(self)
         self.realizarPedido.show()
     def accion_botonEmpleados(self):
-        self.hide()
-        self.empleados = Empleados(self)
-        self.empleados.show()
+        if self.perfilEmpleado == "Administrador":
+            self.hide()
+            self.empleados = Empleados(self)
+            self.empleados.show()
+        else:
+            return QMessageBox.warning(self, 'Alerta', 'No tienes permiso de administrador para realizar esta accion')
     def accion_botonClientes(self):
         self.hide()
         self.clientes = Clientes(self)
         self.clientes.show()
+
+
 
 
 if __name__ == '__main__':

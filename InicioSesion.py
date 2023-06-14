@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QWidget, QVBoxLayout, QLabel, QFormLayout, \
     QLineEdit, QPushButton, QDialog, QDialogButtonBox, QMessageBox
@@ -18,6 +18,8 @@ class IniciarSesion(QMainWindow):
 
         # Titulo de la ventana
         self.setWindowTitle("Inicio de Sesion")
+
+        self.perfilIngreso = ""
 
         # ponemos color de fondo a la ventana
         self.setStyleSheet("background-color: #292828")
@@ -191,6 +193,7 @@ class IniciarSesion(QMainWindow):
                 if (e.nombreEmpleado == self.ingresoUsuario.text() and e.contrasena == self.ingresoContrasena.text()):
 
                     print("se ha ingresado el usuario y contraseña correcto")
+                    self.perfilIngreso = e.cargo.strip()
                     self.hide()
                     self.menuPrincipal = MenuPrincipal(self)
                     self.menuPrincipal.show()
@@ -211,6 +214,8 @@ class IniciarSesion(QMainWindow):
                 self.alerta.setStandardButtons(QMessageBox.Ok)
                 self.alerta.exec_()
 
+    #def enviar_a_menuPrincipal(self):
+        #self.perfilIngreso.emit(self.perfil)
 
 
 if __name__ == '__main__':
