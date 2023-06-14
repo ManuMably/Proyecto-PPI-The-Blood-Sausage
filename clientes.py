@@ -1,12 +1,13 @@
 import sys
 
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QPixmap, QFont, QIcon
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QScrollArea, QTableWidget, QVBoxLayout, QLabel, QApplication, QHBoxLayout, \
-    QStyle, QTableWidgetItem, QPushButton, QLineEdit, QFormLayout, QToolBar, QAction, QMessageBox
+    QStyle, QTableWidgetItem, QPushButton, QLineEdit, QFormLayout, QToolBar, QAction, QMessageBox, QDialogButtonBox, QDialog
 
 from cliente import Cliente
+from gestionClientes import GestionClientes
 
 class Clientes(QMainWindow):
 
@@ -23,7 +24,7 @@ class Clientes(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('imagenes/iconos/clientes.png'))
 
         # Ancho y alto de la ventana
-        self.ancho = 1100
+        self.ancho = 700
         self.alto = 650
 
         # Asignamos el tamaño de ancho y alto a la ventana
@@ -58,7 +59,7 @@ class Clientes(QMainWindow):
         # boton Volver
         self.botonVolver = QPushButton("Volver")
         self.botonVolver.setStyleSheet(
-            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 35px; margin-right: 350px; margin-bottom: 150px;")
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 20px; margin-right: 50px; margin-bottom: 150px;")
         self.botonVolver.setFont(QFont("Arial", 15))
         # ponemos el boton volver a funcionar
         self.botonVolver.clicked.connect(self.accion_botonVolver)
@@ -76,395 +77,265 @@ class Clientes(QMainWindow):
         self.layoutSalirLogo.addWidget(self.labelLogo)
         self.verticalCentral.addWidget(self.salirYLogo)
 
-        # ------------------------------- Bloque donde ira la tabla ----------------------------------------
+        # ------------------------------- Bloque del formulario registro de clientes ----------------------------------------
 
-        # Abrimos el archivo en modo de lectura:
-        self.file = open('archivos_planos/clientes.txt', 'rb')
+        # creamos un layout para el registo de clientes
+        self.formularioRegistro = QFormLayout()
 
-        # lista vacia para guardar los usuarios:
-        self.usuarios = []
+        # creamos el letrero cedula del cliente
+        self.letreroCedula = QLabel()
+        # texto de letrero
+        self.letreroCedula.setText("Cedula")
+        # tipo de letra del letrero
+        self.letreroCedula.setFont(QFont("Arial", 15))
+        # le ponemos los estilos
+        self.letreroCedula.setStyleSheet("background-color: #61433f; margin-left: 20px;"
+                                          "margin-right: 10px ;color: #FFFFFF; border: solid;"
+                                          "border-width: 1px; border-color: #000000;"
+                                          "border-radius: 7px;margin-bottom: 5px;")
+        self.letreroCedula.setAlignment(Qt.AlignCenter)
+        self.letreroCedula.setFixedWidth(200)
 
-        # recorremos el archivo, linea por linea:
-        while self.file:
+        # creamos el campo para el nombre del cliente
+        self.cedulaCliente = QLineEdit()
+        self.cedulaCliente.setFixedWidth(400)
+        self.cedulaCliente.setMaxLength(10)
+        self.cedulaCliente.setStyleSheet("background-color: #ffffff")
 
-            linea = self.file.readline().decode('UTF-8')
+        # agregamos el letrero al layout formularioDatosPedido
+        self.formularioRegistro.addRow(self.letreroCedula, self.cedulaCliente)
 
-            # obtenemos del string una lista con 11 datos separados por;
-            lista = linea.split(";")
-            # Separa si ya no hay mas registros en el archivo
-            if linea == '':
-                break
-            # Creamos un objeto tipo cliente llamado u
-            u = Cliente(
-                lista[0],
-                lista[1],
-                lista[2],
-            )
-            # Metemos el objeto en la lista de usuarios:
-            self.usuarios.append(u)
+        # creamos el letrero nombre del cliente
+        self.letreroNombre = QLabel()
+        # texto de letrero
+        self.letreroNombre.setText("Nombre")
+        # tipo de letra del letrero
+        self.letreroNombre.setFont(QFont("Arial", 15))
+        # le ponemos los estilos
+        self.letreroNombre.setStyleSheet("background-color: #61433f; margin-left: 20px;"
+                                          "margin-right: 10px ;color: #FFFFFF; border: solid;"
+                                          "border-width: 1px; border-color: #000000;"
+                                          "border-radius: 7px;margin-bottom: 5px;")
+        self.letreroNombre.setAlignment(Qt.AlignCenter)
+        self.letreroNombre.setFixedWidth(200)
 
-        # Cerramos el archivo:
-        self.file.close()
+        # creamos el campo para el nombre del cliente
+        self.nombreCliente = QLineEdit()
+        self.nombreCliente.setFixedWidth(400)
+        self.nombreCliente.setStyleSheet("background-color: #ffffff")
 
-        # En este punto tenemos la lista usuarios con todos los usuarios
+        # agregamos el letrero al layout formularioRegistro
+        self.formularioRegistro.addRow(self.letreroNombre, self.nombreCliente)
 
-        # Obtenemos el numero de usuarios registrados:
-        # Consultamos el tamano de la lista usuarios:
-        self.numeroUsuarios = len(self.usuarios)
+        # creamos el letrero nombre del cliente
+        self.letreroDireccion = QLabel()
+        # texto de letrero
+        self.letreroDireccion.setText("Direccion")
+        # tipo de letra del letrero
+        self.letreroDireccion.setFont(QFont("Arial", 15))
+        # le ponemos los estilos
+        self.letreroDireccion.setStyleSheet("background-color: #61433f; margin-left: 20px;"
+                                          "margin-right: 10px ;color: #FFFFFF; border: solid;"
+                                          "border-width: 1px; border-color: #000000;"
+                                          "border-radius: 7px;margin-bottom: 5px;")
+        self.letreroDireccion.setAlignment(Qt.AlignCenter)
+        self.letreroDireccion.setFixedWidth(200)
 
-        # Contador de elementos para controlar a los usuarios en la tabla:
-        self.contador = 0
+        # creamos el campo para el nombre del cliente
+        self.direccionCliente = QLineEdit()
+        self.direccionCliente.setFixedWidth(400)
+        self.direccionCliente.setStyleSheet("background-color: #ffffff")
 
-        # Creamos un scroll:
-        self.scrollArea = QScrollArea()
+        # agregamos el letrero al layout formularioDatosPedido
+        self.formularioRegistro.addRow(self.letreroDireccion, self.direccionCliente)
 
-        # Hacemos Que el scroll se adapte a diferentes tamanos:
-        self.scrollArea.setWidgetResizable(True)
+        # creamos el letrero nombre del cliente
+        self.letreroCelular = QLabel()
+        # texto de letrero
+        self.letreroCelular.setText("Celular")
+        # tipo de letra del letrero
+        self.letreroCelular.setFont(QFont("Arial", 15))
+        # le ponemos los estilos
+        self.letreroCelular.setStyleSheet("background-color: #61433f; margin-left: 20px;"
+                                          "margin-right: 10px ;color: #FFFFFF; border: solid;"
+                                          "border-width: 1px; border-color: #000000;"
+                                          "border-radius: 7px;margin-bottom: 5px; margin-bottom: 50px;")
+        self.letreroCelular.setAlignment(Qt.AlignCenter)
+        self.letreroCelular.setFixedWidth(200)
 
-        # Creamos una tabla:
-        self.tabla = QTableWidget()
+        # creamos el campo para el nombre del cliente
+        self.celularCliente = QLineEdit()
+        self.celularCliente.setFixedWidth(400)
+        self.celularCliente.setMaxLength(10)
+        self.celularCliente.setStyleSheet("background-color: #ffffff")
 
-        # definimos el numero de columnas que tendra la tabla:
-        self.tabla.setColumnCount(3)
-
-        # definimos el ancho de cada columna:
-        self.tabla.setColumnWidth(0, 410)
-        self.tabla.setColumnWidth(1, 410)
-        self.tabla.setColumnWidth(2, 250)
-
-        # Definimos el texto de la cabecera:
-        self.tabla.setHorizontalHeaderLabels(['Nombre',
-                                              'Direccion',
-                                              'Celular'])
-
-        # Establecemos el numero de filas:
-        self.tabla.setRowCount(self.numeroUsuarios)
-
-        # Llenamos la tabla:
-        for u in self.usuarios:
-            self.tabla.setItem(self.contador, 0, QTableWidgetItem(u.nombreCompleto))
-            # Hacemos que el nombre no se pueda editar:
-            self.tabla.item(self.contador, 0).setFlags(Qt.ItemIsEnabled)
-            self.tabla.setItem(self.contador, 1, QTableWidgetItem(u.direccion))
-            self.tabla.setItem(self.contador, 2, QTableWidgetItem(u.celular))
-            self.contador += 1
-
-        # Aplicar hoja de estilo a la tabla
-        self.tabla.setStyleSheet("QTableWidget { background-color: white; }")
-
-        # Metemos la tabla en el scroll:
-        self.scrollArea.setWidget(self.tabla)
-
-        # Metemos en el layout vertical el scroll:
-        self.verticalCentral.addWidget(self.scrollArea)
-
-        """# ________________MENU TOOLBAR_______________________________
-
-        self.toolbar = QToolBar('Main toolbar')
-        self.toolbar.setIconSize(QSize(92, 92))
-        self.toolbar.setStyleSheet("margin-left: 50px;")
-        self.addToolBar(self.toolbar)
-
-        # ---------- add ---------
-        self.add = QAction(QIcon('imagenes/iconos/add.png'), '&Crear', self)
-        self.add.triggered.connect(self.accion_add)
-        self.toolbar.addAction(self.add)
-
-        # ---------- insert ------------
-        self.insert = QAction(QIcon('imagenes/iconos/edit.png'), '&Editar', self)
-        self.insert.triggered.connect(self.accion_insert)
-        self.toolbar.addAction(self.insert)
-
-        # -------------- delete ----------
-        self.delete = QAction(QIcon('imagenes/iconos/delete.png'), '&Eliminar', self)
-        self.delete.triggered.connect(self.accion_delete)
-        self.toolbar.addAction(self.delete)
-
-        self.verticalCentral.addWidget(self.toolbar)"""
-        # ------------------------------Bloque de botones ---------------------------------------------------
-        # widget para distribucion de botones registrar, cambiar, eliminar
-        self.bloqueBotones = QWidget()
-        # layout para bloqueBotones
-        self.layoutBloqueBotones = QHBoxLayout()
-        self.bloqueBotones.setLayout(self.layoutBloqueBotones)
+        # agregamos el letrero al layout formularioDatosPedido
+        self.formularioRegistro.addRow(self.letreroCelular, self.celularCliente)
 
         # boton registrar
-        self.botonRegistrar = QPushButton("Agregar")
+        self.botonRegistrar = QPushButton("Registrar")
+        self.botonRegistrar.setFixedWidth(160)
         self.botonRegistrar.setStyleSheet(
-            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 20px; margin-bottom: 30px;")
         self.botonRegistrar.setFont(QFont("Arial", 15))
         # ponemos el boton Agregar a funcionar
-        self.botonRegistrar.clicked.connect(self.accion_add)
-        # lo agregamos
-        self.layoutBloqueBotones.addWidget(self.botonRegistrar)
+        self.botonRegistrar.clicked.connect(self.accion_Registrar)
 
-        # boton Cambiar
-        self.botonCambiar = QPushButton("Actualizar")
-        self.botonCambiar.setStyleSheet(
-            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
-        self.botonCambiar.setFont(QFont("Arial", 15))
+        # boton limpiar
+        self.botonLimpiar = QPushButton("Limpiar")
+        self.botonLimpiar.setFixedWidth(160)
+        self.botonLimpiar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 20px; margin-bottom: 30px;")
+        self.botonLimpiar.setFont(QFont("Arial", 15))
         # ponemos el boton actualizar a funcionar
-        self.botonCambiar.clicked.connect(self.accion_insert)
-        # lo agregamos
-        self.layoutBloqueBotones.addWidget(self.botonCambiar)
+        self.botonLimpiar.clicked.connect(self.accion_Limpiar)
 
-        # boton Eliminar
-        self.botonEliminar = QPushButton("Eliminar")
-        self.botonEliminar.setStyleSheet(
-            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
-        self.botonEliminar.setFont(QFont("Arial", 15))
-        # ponemos el boton Eliminar a funcionar
-        self.botonEliminar.clicked.connect(self.accion_delete)
-        # lo agregamos
-        self.layoutBloqueBotones.addWidget(self.botonEliminar)
+        self.formularioRegistro.addRow(self.botonRegistrar, self.botonLimpiar)
 
-        # agragamos el bloque de botones a la vertical central
-        self.verticalCentral.addWidget(self.bloqueBotones)
+        # hacemos un boton para gestion de clientes
+        self.gestionarClientes = QPushButton("Gestionar Clientes")
+        self.gestionarClientes.setFixedWidth(270)
+        self.gestionarClientes.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 20px; margin-bottom: 30px;")
+        self.gestionarClientes.setFont(QFont("Arial", 15))
+        self.gestionarClientes.clicked.connect(self.accion_gestionarClientes)
+
+        self.formularioRegistro.addRow(self.gestionarClientes)
+
+        # agregamos el formulario al layout vertical
+        self.verticalCentral.addLayout(self.formularioRegistro)
 
         # poner al ultimo
-        # establecemos verticalCentral como layout del centralInicioSesion
+        # establecemos verticalCentral como layout del verticalcentral
         self.central.setLayout(self.verticalCentral)
+
+        # -------------------CONSTRUCCION DE LA VENTANA EMERGENTE-----------------------
+
+        # creamos ventana de dialogo
+        self.ventanaDialogo = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
+
+        # definimos el tamaño de la ventana
+        self.ventanaDialogo.resize(300, 150)
+
+        # cramos un boton para aceptar
+        self.botonAceptar = QDialogButtonBox.Ok
+        self.opcionesBotones = QDialogButtonBox(self.botonAceptar)
+        self.opcionesBotones.accepted.connect(self.ventanaDialogo.accept)
+
+        # establecemos el titulo de la ventana
+        self.ventanaDialogo.setWindowTitle("Formulario de registro")
+
+        # configuramos la ventana para que sea modal
+        self.ventanaDialogo.setWindowModality(Qt.ApplicationModal)
+
+        # creamos un layout vertical
+        self.vertical = QVBoxLayout()
+
+        # cramos un label para mensajes
+        self.mensaje = QLabel("")
+
+        # le ponemos estilos al label
+        self.mensaje.setStyleSheet("background-color: #61433f; color: #FFFFFF; padding: 10px;")
+
+        # agregamos el label de mensajes
+        self.vertical.addWidget(self.mensaje)
+
+        # agregamos las opciones de los botones
+        self.vertical.addWidget(self.opcionesBotones)
+
+        # establecemos el layout vertical a la ventana
+        self.ventanaDialogo.setLayout(self.vertical)
 
     def accion_botonVolver(self):
         self.hide()
         self.menuPrincipal.show()
 
-    def accion_delete(self):
+    def accion_Registrar(self):
 
-        filaActual = self.tabla.currentRow()
+        # variable para controlar que los datos ingresados son correctos
+        self.datosCorrectos = True
 
-        if filaActual < 0:
-            return QMessageBox.warning(self,
-                                       'Alerta',
-                                       'Para borrar, se debe seleccionar un registro')
+        # validamos que se ingresen todos los campos
+        if ( self.cedulaCliente.text() == ''
+            or self.nombreCliente.text() == ''
+            or self.direccionCliente.text() == ''
+            or self.celularCliente.text() == ''):
 
-        boton = QMessageBox.question(self,
-                                    'Confirmacion',
-                                    '¿Esta seguro de que quieres borrar este registro?',
-                                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
-                                )
+            self.datosCorrectos = False
 
-        if boton == QMessageBox.StandardButton.Yes:
+            # escribimos texto explicativo
+            self.mensaje.setText("Debe ingresar todos los campos")
 
-            if (
-                self.tabla.item(filaActual, 0).text() != '' and
-                self.tabla.item(filaActual, 1).text() != '' and
-                self.tabla.item(filaActual, 2).text() != ''
-            ):
+            # hacemos que la ventana de dialogo se vea
+            self.ventanaDialogo.exec_()
 
-                # Abrimos el archivo en modo de lectura:
-                self.file = open('archivos_planos/clientes.txt', 'rb')
+            self.cedulaCliente.setText('')
+            self.nombreCliente.setText('')
+            self.direccionCliente.setText('')
+            self.celularCliente.setText('')
 
-                # lista vacia para guardar los usuarios:
-                usuarios = []
+        if ( self.cedulaCliente.text() and not self.cedulaCliente.text().isnumeric()
+            or self.celularCliente.text() and not self.celularCliente.text().isnumeric()):
 
-                # Iteramos sobre el archivo linea por linea:
-                while self.file:
-                    linea = self.file.readline().decode('UTF-8')
-                    # obtenemos dle string una lista con 11 datos separados por ;
-                    lista = linea.split(";")
-                    # va a parar si ya no hay mas registros en el archivo
-                    if linea == '':
-                        break
-                    # creamos un objeto tipo cliente llamado u
-                    # y le pasamos los elementos de la lista:
-                    u = Cliente(
-                        lista[0],
-                        lista[1],
-                        lista[2],
-                    )
-                    # metemos el objeto en la lista de usuarios:
-                    usuarios.append(u)
+            self.datosCorrectos = False
 
-                # cerramos el archivo:
-                self.file.close()
+            # escribimos texto explicativo
+            self.mensaje.setText("Los campos Cedula o Celular deben ser numericos"
+                                 "\nintente nuevamente.")
 
-                # en este punto tenemos la lista usuarios con todos los usuarios:
+            # hacemos que la ventana de dialogo se vea
+            self.ventanaDialogo.exec_()
 
-                # Recorremos la lista de usuarios
-                for u in usuarios:
-                    # buscamos el usuario por el nombre:
-                    if (
-                            u.nombreCompleto == self.tabla.item(filaActual, 0).text()
-                    ):
+            self.cedulaCliente.setText('')
+            self.celularCliente.setText('')
 
-                        # Removemos el usuario de la lista de usuarios:
-                        usuarios.remove(u)
+        # si los datos estan correctos
+        if self.datosCorrectos:
 
-                        # paramos el for:
-                        break
+            # abrimos el archivo en modo agregar escribiendo datos en binario
+            self.file = open('archivos_planos/clientes.txt', 'ab')
 
-                # Abrimos el archivo en modo escritura para reescribir los datos sin el usuario borrado.
-                self.file = open('archivos_planos/clientes.txt', 'wb')
+            # trae el texto de los QlineEdit y los agrega contatenados
+            self.file.write(bytes(self.cedulaCliente.text() + ";"
+                                  + self.nombreCliente.text() + ";"
+                                  + self.direccionCliente.text() + ";"
+                                  + self.celularCliente.text() + "\n", encoding='UTF-8'))
+            # para cerrar el archivo
+            self.file.close()
 
-                # recorremos la lista de usuarios
-                # para guardar usuario por usuario en el archivo
-                for u in usuarios:
-                    self.file.write(bytes(u.nombreCompleto + ";"
-                                          + u.direccion + ";"
-                                          + u.celular, encoding='UTF-8'))
-                self.file.close()
+            # escribimos un texto explicativo
+            self.mensaje.setText("El cliente ha sido registrado correctamente")
 
-                # Hacemos que en la tabla no se vea el registro:
-                self.tabla.removeRow(filaActual)
+            # hacemos que la ventana de dialogo se vea
+            self.ventanaDialogo.exec_()
 
-                return QMessageBox.question(self,
-                                            'Confirmation',
-                                            'El registro ha sido eliminado exitosamente.',
-                                            QMessageBox.StandardButton.Yes
-                                        )
-            else:
-                # Hacemos que en la tabla no se vea el registro en case de tratarse de una fila vacia:
-                self.tabla.removeRow(filaActual)
+            self.cedulaCliente.setText('')
+            self.nombreCliente.setText('')
+            self.direccionCliente.setText('')
+            self.celularCliente.setText('')
 
+            # abrimos en modo lectura en formato de bytes
+            self.file = open('archivos_planos/clientes.txt', 'rb')
 
-    def accion_add(self):
+            # recorre el archivo linea por linea
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+                print(linea)
+                if linea == '':  # para cuando encuentra una linea vacia
+                    break
+            self.file.close()
 
-        # Obtenemos el numero de filas que tiene la tabla:
-        ultimaFila = self.tabla.rowCount()
+    def accion_Limpiar(self):
 
-        # Insertamos una fila nueva despues de la ultima fila:
-        self.tabla.insertRow(ultimaFila)
+        self.cedulaCliente.setText('')
+        self.nombreCliente.setText('')
+        self.direccionCliente.setText('')
+        self.celularCliente.setText('')
 
-        # llenamos cada celda de la nueva fila con un string vacio '':
-        self.tabla.setItem(ultimaFila, 0, QTableWidgetItem(''))
-        self.tabla.setItem(ultimaFila, 1, QTableWidgetItem(''))
-        self.tabla.setItem(ultimaFila, 2, QTableWidgetItem(''))
-
-    def accion_insert(self):
-
-        filaActual = self.tabla.currentRow()
-
-        if filaActual < 0:
-            return QMessageBox.warning(self, 'Alerta', 'Para ingresar, debe seleccionar un registro')
-
-        boton = QMessageBox.question(self,
-                                    'Confirmacion',
-                                    '¿Esta seguro de que quiere ingresar este nuevo registro?',
-                                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
-                                )
-
-        # variable para controlar que se hayan ingresado todos los datos:
-        datosVacios = True
-
-        if boton == QMessageBox.StandardButton.Yes:
-
-            # Validamos que se hayan ingresado los datos:
-            if (
-                    self.tabla.item(filaActual, 0).text() != '' and
-                    self.tabla.item(filaActual, 1).text() != '' and
-                    self.tabla.item(filaActual, 2).text() != ''
-            ):
-                # Actualizamos la variable para indicar que se ingresaron todos los datos:
-                datosVacios = False
-
-                # Abrimos el archivo en modo de lectura:
-                self.file = open('archivos_planos/clientes.txt', 'rb')
-
-                # lista vacia para guardar los usuarios:
-                usuarios = []
-
-                # Iteramos sobre el archivo liena por linea:
-                while self.file:
-                    linea = self.file.readline().decode('UTF-8')
-                    # obtenemos del string una lista con 11 datos separados por ;
-                    lista = linea.split(";")
-                    # se detiene si yan o hay mas Registros en el archivo
-                    if linea == '':
-                        break
-                    # Creamos un objeto tipo cliente llamado u
-                    # y le pasamos los elementos de la lista:
-                    u = Cliente(
-                        lista[0],
-                        lista[1],
-                        lista[2],
-                    )
-                    # metemos el objeto en la lista de usuarios:
-                    usuarios.append(u)
-
-                # Cerramos el archivo:
-                self.file.close()
-
-                # En este punto tenemos la lista usuarios con todos los usuarios:
-
-                # Variable para controlar si ya existe el registro:
-                existeRegistro = False
-
-                # Variable para controlar si ya es un registro que ya existe y se va a editar:
-                existeNombreCompleto = False
-
-                # recorremos la lista de usuarios
-                for u in usuarios:
-                    # comparamos todos los datos del registro ingresado:
-                    if (
-                            u.nombreCompleto == self.tabla.item(filaActual, 0).text() and
-                            u.direccion == self.tabla.item(filaActual, 1).text() and
-                            u.celular == self.tabla.item(filaActual, 2).text()
-                    ):
-                        # Indicamos que encontramos el docuemnto:
-                        existeRegistro = True
-
-                        return QMessageBox.warning(self, 'Alerta', 'Registro duplicado, no se puede registrar')
-
-                        # Paramos el for:
-                        break
-
-            # si los datos son diferentes a lo que existe:
-            if not existeRegistro:
-
-                # Recorre la lista de usuarios
-                for u in usuarios:
-                    # comparamo todos los datos del registro ingresado ocn el documento:
-                    if (u.nombreCompleto == self.tabla.item(filaActual, 0).text()):
-                        # Indicamos que encontramos el documento
-                        existeNombreCompleto = True
-
-                        # Volvemos a actualizar todos los datos del usuario:
-                        u.nombreCompleto = self.tabla.item(filaActual, 0).text()
-                        u.direccion = self.tabla.item(filaActual, 1).text()
-                        u.celular = self.tabla.item(filaActual, 2).text()
-
-                        # abrimos el archivo en modo escritura escribiendo datos en binario.
-                        self.file = open('archivos_planos/clientes.txt', 'wb')
-
-                        # recorremos la lista de usuarios
-                        # para guardar usuario por usuario en el archivo
-                        for u in usuarios:
-                            self.file.write(bytes(u.nombreCompleto + ";"
-                                                  + u.direccion + ";"
-                                                  + u.celular, encoding='UTF-8'))
-
-                        self.file.close()
-
-                        return QMessageBox.question(self,
-                                                    'Confirmacion',
-                                                    'Los datos del registro se han editado exitosamente.',
-                                                    QMessageBox.StandardButton.Ok
-                                                )
-
-                        # Paramos el for:
-                        break
-
-                # si se trata de un usuario nuevo:
-                if not existeNombreCompleto:
-                    # Abrimos el archivo en modo agregar escribiendo datos en binario.
-                    self.file = open('archivos_planos/clientes.txt', 'ab')
-
-                    # agregamos los datos de la fila en el archivo
-                    self.file.write(bytes(self.tabla.item(filaActual, 0).text() + ";" +
-                                          self.tabla.item(filaActual, 1).text() + ";" +
-                                          self.tabla.item(filaActual, 2).text() + "\n", encoding='UTF-8'))
-                    self.file.seek(0, 2)
-                    self.file.close()
-
-                return QMessageBox.question(self,
-                                            'Confirmacion',
-                                            'Los datos del registro se han ingresado exitosamente.',
-                                            QMessageBox.StandardButton.Ok
-                                        )
-
-        if datosVacios:
-            return QMessageBox.warning(self, 'Alerta', 'Debe ingresar todos los datos en el registro')
+    def accion_gestionarClientes(self):
+        self.hide()
+        self.gentionClientes = GestionClientes(self)
+        self.gentionClientes.show()
 
 
 if __name__ == '__main__':
