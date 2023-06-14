@@ -3,7 +3,10 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, \
-    QWidget, QFormLayout, QLineEdit
+    QWidget, QFormLayout, QLineEdit, QScrollArea, QTableWidget, QTableWidgetItem
+
+from pedido import Pedido
+
 
 class VentanaHistorialPedidos(QMainWindow):
 
@@ -88,60 +91,142 @@ class VentanaHistorialPedidos(QMainWindow):
         # agregamos el widget de volverYTitulo
         self.verticalPrincipal.addWidget(self.volverYTitulo)
 
-        # ------------------------------------------------------------------------------
-        # TABLA: imagen de lo que sera la tabla de historial de pedidos
-        self.tablaHistorialPedidos = QLabel()
-        self.imagenTabla = QPixmap("imagenes/ejemploTabla.PNG")
-        self.tablaHistorialPedidos.setPixmap(self.imagenTabla)
-        self.tablaHistorialPedidos.setAlignment(Qt.AlignHCenter)
-        self.tablaHistorialPedidos.setFixedHeight(200)
+        # ------------------------------- Bloque donde ira la tabla ----------------------------------------
 
-        # agregamos la tabla a el horizontalTablaYFormulario
-        self.verticalPrincipal.addWidget(self.tablaHistorialPedidos)
+        # Abrimos el archivo en modo de lectura:
+        self.file = open('archivos_planos/pedidos.txt', 'rb')
 
-        # ------------------- Bloque modificacion de pedidos ---------------------------
-        self.modificarPedido = QLabel()
-        self.modificarPedido.setAlignment(Qt.AlignCenter)
-        self.layoutModificarPedido = QHBoxLayout()
+        # lista vacia para guardar los usuarios:
+        self.pedidos = []
 
-        # ------------------ entrada de datos ------------------------------------------
-        self.entradaDatosModificacion = QLabel()
-        self.imagenEntrada = QPixmap("imagenes/miniaturaSeleccionProducto.JPG")
-        self.entradaDatosModificacion.setPixmap(self.imagenEntrada)
-        # establecemos que se pueda escalar la imagen
-        self.entradaDatosModificacion.setScaledContents(True)
-        # el tamaño de la imagen se adapta a la ventana
-        self.resize(self.entradaDatosModificacion.width(), self.entradaDatosModificacion.height())
-        self.entradaDatosModificacion.setAlignment(Qt.AlignHCenter)
-        # agregamos la entrada de datos al layout modificar pedido
-        self.layoutModificarPedido.addWidget(self.entradaDatosModificacion)
-        # ------------------ Botones ---------------------------------------------------
-        self.botonesModificarPedido = QLabel()
-        self.botonesModificarPedido.setAlignment(Qt.AlignCenter)
-        self.layoutBotonesModificacion = QVBoxLayout()
+        # recorremos el archivo, linea por linea:
+        while self.file:
 
-        # boton Actualizar
-        self.botonActualizar = QPushButton("Actualizar")
-        self.botonActualizar.setStyleSheet("border-radius: 10px; background-color: #515670; color: #ffffff; margin-left: 30px; margin-right: 30px; margin-bottom: 10px; margin-top: 0px;")
-        self.botonActualizar.setFont(QFont("Arial", 15))
-        self.layoutBotonesModificacion.addWidget(self.botonActualizar)
+            linea = self.file.readline().decode('UTF-8')
+
+            # obtenemos del string una lista con 11 datos separados por;
+            lista = linea.split(";")
+            # Separa si ya no hay mas registros en el archivo
+            if linea == '':
+                break
+            # Creamos un objeto tipo cliente llamado u
+            p = Pedido(
+                lista[0],
+                lista[1],
+                lista[2],
+                lista[3],
+                lista[4],
+                lista[5],
+                lista[6]
+            )
+            # Metemos el objeto en la lista de usuarios:
+            self.pedidos.append(p)
+
+        # Cerramos el archivo:
+        self.file.close()
+
+        # En este punto tenemos la lista usuarios con todos los pedidos
+
+        # Obtenemos el numero de usuarios registrados:
+        # Consultamos el tamano de la lista usuarios:
+        self.numeroPedidos = len(self.pedidos)
+
+        # Contador de elementos para controlar a los usuarios en la tabla:
+        self.contador = 0
+
+        # Creamos un scroll:
+        self.scrollArea = QScrollArea()
+
+
+        # Hacemos Que el scroll se adapte a diferentes tamanos:
+        self.scrollArea.setWidgetResizable(True)
+
+        # Creamos una tabla:
+        self.tabla = QTableWidget()
+
+        # definimos el numero de columnas que tendra la tabla:
+        self.tabla.setColumnCount(7)
+
+        # definimos el ancho de cada columna:
+        self.tabla.setColumnWidth(0, 250)
+        self.tabla.setColumnWidth(1, 250)
+        self.tabla.setColumnWidth(2, 250)
+        self.tabla.setColumnWidth(3, 250)
+        self.tabla.setColumnWidth(4, 250)
+        self.tabla.setColumnWidth(5, 250)
+        self.tabla.setColumnWidth(6, 250)
+
+        # Definimos el texto de la cabecera:
+        self.tabla.setHorizontalHeaderLabels(['Nombre',
+                                              'Direccion',
+                                              'Celular',
+                                              'Cantidad Morcilla',
+                                              'Cantidad Chorizo',
+                                              'Cantidad Arroz',
+                                              'Estado del Pedido'])
+
+        # Establecemos el numero de filas:
+        self.tabla.setRowCount(self.numeroPedidos)
+
+        # Llenamos la tabla:
+        for p in self.pedidos:
+            self.tabla.setItem(self.contador, 0, QTableWidgetItem(p.nombreCliente))
+            self.tabla.setItem(self.contador, 1, QTableWidgetItem(p.direccion))
+            self.tabla.setItem(self.contador, 2, QTableWidgetItem(p.celular))
+            self.tabla.setItem(self.contador, 3, QTableWidgetItem(p.morcillaCantidad))
+            self.tabla.setItem(self.contador, 4, QTableWidgetItem(p.chorizoCantidad))
+            self.tabla.setItem(self.contador, 5, QTableWidgetItem(p.arrozCantidad))
+            self.tabla.setItem(self.contador, 6, QTableWidgetItem(p.estadoPedido))
+            self.contador += 1
+
+        # Aplicar hoja de estilo a la tabla
+        self.tabla.setStyleSheet("QTableWidget { background-color: white; }")
+
+        # Metemos la tabla en el scroll:
+        self.scrollArea.setWidget(self.tabla)
+
+        # Metemos en el layout vertical el scroll:
+        self.verticalPrincipal.addWidget(self.scrollArea)
+
+        # ------------------------------Bloque de botones ---------------------------------------------------
+        # widget para distribucion de botones registrar, cambiar, eliminar
+        self.bloqueBotones = QWidget()
+        # layout para bloqueBotones
+        self.layoutBloqueBotones = QHBoxLayout()
+        self.bloqueBotones.setLayout(self.layoutBloqueBotones)
+
+        # boton registrar
+        self.botonRegistrar = QPushButton("Agregar")
+        self.botonRegistrar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+        self.botonRegistrar.setFont(QFont("Arial", 15))
+        # ponemos el boton Agregar a funcionar
+        #self.botonRegistrar.clicked.connect(self.accion_add)
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonRegistrar)
+
+        # boton Cambiar
+        self.botonCambiar = QPushButton("Actualizar")
+        self.botonCambiar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
+        self.botonCambiar.setFont(QFont("Arial", 15))
+        # ponemos el boton actualizar a funcionar
+        #self.botonCambiar.clicked.connect(self.accion_insert)
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonCambiar)
+
         # boton Eliminar
         self.botonEliminar = QPushButton("Eliminar")
-        self.botonEliminar.setStyleSheet("border-radius: 10px; background-color: #515670; color: #ffffff; margin-left: 30px; margin-right: 30px; margin-bottom: 10px; margin-top: 0px;")
+        self.botonEliminar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 150px;")
         self.botonEliminar.setFont(QFont("Arial", 15))
-        self.layoutBotonesModificacion.addWidget(self.botonEliminar)
+        # ponemos el boton Eliminar a funcionar
+        #self.botonEliminar.clicked.connect(self.accion_delete)
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonEliminar)
 
-
-        # establecemos el layout de los botones
-        self.botonesModificarPedido.setLayout(self.layoutBotonesModificacion)
-        # agregamos los botones a el bloque modificacion de pedidos
-        self.layoutModificarPedido.addWidget(self.botonesModificarPedido)
-
-
-        # establecemos el layout del bloque modificarPedido
-        self.modificarPedido.setLayout(self.layoutModificarPedido)
-        # agregamos el bloque modificarPedido a la vertical principal
-        self.verticalPrincipal.addWidget(self.modificarPedido)
+        # agragamos el bloque de botones a la vertical central
+        self.verticalPrincipal.addWidget(self.bloqueBotones)
 
 
 
