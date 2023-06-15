@@ -1,7 +1,8 @@
 
 class Cliente:
 
-    def __init__(self, cedula,
+    def __init__(self,
+                 cedula,
                  nombreCompleto,
                  direccion,
                  celular,):

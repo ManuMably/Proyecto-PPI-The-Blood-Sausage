@@ -1,3 +1,1 @@
-56;Alex cardona Restrepo;calle 46 # 76 - 80;3126667890;3;2;5;pendiente
-579;Juan Camilo Estrada;carrera 27 # 30 - 23;3206845670;3;0;2;pendiente
-664;Yhoimer Amado Salas Hoyos;calle 56A # 90 - 36;3146002791;1;0;0;pendiente
+415;Juan Esteban Moreno;1000222333;Carrera 57 # 70 - 24;3002001020;2;4;3;pendiente

@@ -118,7 +118,8 @@ class VentanaHistorialPedidos(QMainWindow):
                 lista[4],
                 lista[5],
                 lista[6],
-                lista[7]
+                lista[7],
+                lista[8]
             )
             # Metemos el objeto en la lista de usuarios:
             self.pedidos.append(p)
@@ -146,7 +147,7 @@ class VentanaHistorialPedidos(QMainWindow):
         self.tabla = QTableWidget()
 
         # definimos el numero de columnas que tendra la tabla:
-        self.tabla.setColumnCount(8)
+        self.tabla.setColumnCount(9)
 
         # definimos el ancho de cada columna:
         self.tabla.setColumnWidth(0, 100)
@@ -157,15 +158,16 @@ class VentanaHistorialPedidos(QMainWindow):
         self.tabla.setColumnWidth(5, 230)
         self.tabla.setColumnWidth(6, 230)
         self.tabla.setColumnWidth(7, 230)
+        self.tabla.setColumnWidth(8, 230)
 
         # Definimos el texto de la cabecera:
-        self.tabla.setHorizontalHeaderLabels(['Codigo Pedido', 'Nombre',
+        self.tabla.setHorizontalHeaderLabels(['Codigo Pedido', 'Cedula', 'Nombre',
                                               'Direccion',
                                               'Celular',
                                               'Cantidad Morcilla',
                                               'Cantidad Chorizo',
                                               'Cantidad Arroz',
-                                              'Estado del Pedido'])
+                                              'Estado del Pedido',])
 
         # Establecemos el numero de filas:
         self.tabla.setRowCount(self.numeroPedidos)
@@ -174,12 +176,13 @@ class VentanaHistorialPedidos(QMainWindow):
         for p in self.pedidos:
             self.tabla.setItem(self.contador, 0, QTableWidgetItem(p.codigoPedido))
             self.tabla.setItem(self.contador, 1, QTableWidgetItem(p.nombreCliente))
-            self.tabla.setItem(self.contador, 2, QTableWidgetItem(p.direccion))
-            self.tabla.setItem(self.contador, 3, QTableWidgetItem(p.celular))
-            self.tabla.setItem(self.contador, 4, QTableWidgetItem(p.morcillaCantidad))
-            self.tabla.setItem(self.contador, 5, QTableWidgetItem(p.chorizoCantidad))
-            self.tabla.setItem(self.contador, 6, QTableWidgetItem(p.arrozCantidad))
-            self.tabla.setItem(self.contador, 7, QTableWidgetItem(p.estadoPedido))
+            self.tabla.setItem(self.contador, 2, QTableWidgetItem(p.cedulaCliente))
+            self.tabla.setItem(self.contador, 3, QTableWidgetItem(p.direccion))
+            self.tabla.setItem(self.contador, 4, QTableWidgetItem(p.celular))
+            self.tabla.setItem(self.contador, 5, QTableWidgetItem(p.morcillaCantidad))
+            self.tabla.setItem(self.contador, 6, QTableWidgetItem(p.chorizoCantidad))
+            self.tabla.setItem(self.contador, 7, QTableWidgetItem(p.arrozCantidad))
+            self.tabla.setItem(self.contador, 8, QTableWidgetItem(p.estadoPedido))
             self.contador += 1
 
         # Aplicar hoja de estilo a la tabla
@@ -317,6 +320,7 @@ class VentanaHistorialPedidos(QMainWindow):
                         lista[5],
                         lista[6],
                         lista[7],
+                        lista[8]
                     )
                     # metemos el objeto en la lista de usuarios:
                     pedidos.append(p)
@@ -345,7 +349,7 @@ class VentanaHistorialPedidos(QMainWindow):
                 # recorremos la lista de usuarios
                 # para guardar usuario por usuario en el archivo
                 for p in pedidos:
-                    self.file.write(bytes(p.codigoPedido + ";" + p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
+                    self.file.write(bytes(p.codigoPedido + ";" + p.cedulaCliente.strip() + ";" + p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
                 self.file.close()
 
                 # Hacemos que en la tabla no se vea el registro:
@@ -411,7 +415,8 @@ class VentanaHistorialPedidos(QMainWindow):
                         lista[4],
                         lista[5],
                         lista[6],
-                        lista[7]
+                        lista[7],
+                        lista[8]
                     )
                     # metemos el objeto en la lista de usuarios:
                     pedidos.append(p)
@@ -442,12 +447,13 @@ class VentanaHistorialPedidos(QMainWindow):
                         # Volvemos a actualizar todos los datos del usuario:
                         p.codigoPedido = self.tabla.item(filaActual, 0).text()
                         p.nombreCliente = self.tabla.item(filaActual, 1).text()
-                        p.direccion = self.tabla.item(filaActual, 2).text()
-                        p.celular = self.tabla.item(filaActual,3).text()
-                        p.morcillaCantidad = self.tabla.item(filaActual, 4).text()
-                        p.chorizoCantidad = self.tabla.item(filaActual, 5).text()
-                        p.arrozCantidad = self.tabla.item(filaActual, 6).text()
-                        p.estadoPedido = self.tabla.item(filaActual, 7).text()
+                        p.cedulaCliente = self.tabla.item(filaActual,2).text()
+                        p.direccion = self.tabla.item(filaActual, 3).text()
+                        p.celular = self.tabla.item(filaActual,4).text()
+                        p.morcillaCantidad = self.tabla.item(filaActual, 5).text()
+                        p.chorizoCantidad = self.tabla.item(filaActual, 6).text()
+                        p.arrozCantidad = self.tabla.item(filaActual, 7).text()
+                        p.estadoPedido = self.tabla.item(filaActual, 8).text()
 
                         # abrimos el archivo en modo escritura escribiendo datos en binario.
                         self.file = open('archivos_planos/clientes.txt', 'wb')
@@ -455,7 +461,7 @@ class VentanaHistorialPedidos(QMainWindow):
                         # recorremos la lista de usuarios
                         # para guardar usuario por usuario en el archivo
                         for p in pedidos:
-                            self.file.write(bytes(p.codigoPedido + ";" + p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
+                            self.file.write(bytes(p.codigoPedido + ";" + p.nombreCliente + ";" + p.cedulaCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
 
                         self.file.close()
 

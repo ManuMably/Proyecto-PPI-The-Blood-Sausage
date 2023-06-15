@@ -1,6 +1,7 @@
 class Pedido:
 
     def __init__(self, codigoPedido,
+                 cedulaCliente,
                  nombreCliente,
                  direccion,
                  celular,
@@ -11,6 +12,7 @@ class Pedido:
 
         self.codigoPedido = codigoPedido
         self.nombreCliente = nombreCliente
+        self.cedulaCliente = cedulaCliente
         self.direccion = direccion
         self.celular = celular
         self.morcillaCantidad = morcillaCantidad
@@ -19,4 +21,4 @@ class Pedido:
         self.estadoPedido = estadoPedido
 
     def __str__(self):
-        return f"Codigo Pedido: {self.codigoPedido} Nombre Cliente: {self.nombreCliente} Direccion: {self.direccion} Celular: {self.celular} CantidadMoricilla: {self.morcillaCantidad} CantidadChorizo: {self.chorizoCantidad} CantidadArroz: {self.arrozCantidad} EstadoPedido: {self.estadoPedido}"
+        return f"Codigo Pedido: {self.codigoPedido} Nombre Cliente: {self.nombreCliente} Cedula: {self.cedulaCliente} Direccion: {self.direccion} Celular: {self.celular} CantidadMoricilla: {self.morcillaCantidad} CantidadChorizo: {self.chorizoCantidad} CantidadArroz: {self.arrozCantidad} EstadoPedido: {self.estadoPedido}"
