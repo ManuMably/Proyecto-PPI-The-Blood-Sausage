@@ -180,7 +180,7 @@ class RealizarPedido(QMainWindow):
 
         self.botonlimpiar.setFont(QFont("Arial", 15))
 
-        #self.botonlimpiar.clicked.connect(self.accion_botonlimpiar)
+        self.botonlimpiar.clicked.connect(self.accion_botonlimpiar)
 
         self.formularioDatosPedido.addRow(self.botonlimpiar)
 
@@ -280,6 +280,13 @@ class RealizarPedido(QMainWindow):
         self.horizontalBotones.addWidget(self.botonDisminuir)
 
         self.producto1.addLayout(self.horizontalBotones)
+
+        self.cantidadMorcilla = QLineEdit('0')
+        self.cantidadMorcilla.setFixedWidth(100)
+        self.cantidadMorcilla.setStyleSheet("background-color: #ffffff;"
+                                            "margin-left: 70px")
+        self.cantidadMorcilla.setAlignment(Qt.AlignHCenter)
+        self.producto1.addWidget(self.cantidadMorcilla)
         self.horizontalProductos.addLayout(self.producto1)
 
 
@@ -346,6 +353,13 @@ class RealizarPedido(QMainWindow):
         self.horizontalBotones2.addWidget(self.botonDisminuir2)
 
         self.producto2.addLayout(self.horizontalBotones2)
+
+        self.cantidadChorizo = QLineEdit('0')
+        self.cantidadChorizo.setFixedWidth(100)
+        self.cantidadChorizo.setStyleSheet("background-color: #ffffff;"
+                                           "margin-left: 70px")
+        self.cantidadChorizo.setAlignment(Qt.AlignHCenter)
+        self.producto2.addWidget(self.cantidadChorizo)
         self.horizontalProductos.addLayout(self.producto2)
 
         self.producto3 = QVBoxLayout()
@@ -353,7 +367,9 @@ class RealizarPedido(QMainWindow):
         # creamos un label para la imagen
         self.imagenArroz = QLabel()
         self.imagen3 = QPixmap('imagenes/arroz.jpg')
+
         #self.imagenArroz.setStyleSheet("margin-left: 10px;")
+
         self.imagenArroz.setScaledContents(True)
         self.imagenArroz.setFixedWidth(150)
         self.imagenArroz.setFixedHeight(150)
@@ -369,6 +385,7 @@ class RealizarPedido(QMainWindow):
                                        "color: #FFFFFF; border: solid;"
                                        "border-width: 1px; border-color: #000000;"
                                        "border-radius: 7px;margin-bottom:5px;")
+
         self.nombreArroz.setAlignment(Qt.AlignCenter)
         self.nombreArroz.setFixedWidth(150)
         self.nombreArroz.setFixedHeight(50)
@@ -384,6 +401,7 @@ class RealizarPedido(QMainWindow):
 
         self.producto3.addWidget(self.cantidadProducto3)
         # fin contador producto2 ----------------------------------
+
 
         self.horizontalProductos.addLayout(self.producto3)
 
@@ -411,6 +429,13 @@ class RealizarPedido(QMainWindow):
         self.horizontalBotones3.addWidget(self.botonDisminuir3)
 
         self.producto3.addLayout(self.horizontalBotones3)
+
+        self.cantidadArroz= QLineEdit('0')
+        self.cantidadArroz.setFixedWidth(100)
+        self.cantidadArroz.setStyleSheet("background-color: #ffffff;"
+                                         "margin-left: 70px")
+        self.cantidadArroz.setAlignment(Qt.AlignHCenter)
+        self.producto3.addWidget(self.cantidadArroz)
         self.horizontalProductos.addLayout(self.producto3)
 
         #   |self.horizontalProductos.addStretch()
@@ -429,6 +454,7 @@ class RealizarPedido(QMainWindow):
     def accion_botonVolver(self):
         self.hide()
         self.menuPrincipal.show()
+
 
     def accion_botonMasP1(self):
         cantidadActual = int(self.cantidadProducto1.text())
@@ -551,6 +577,7 @@ class RealizarPedido(QMainWindow):
                 self.alerta.setText("El cliente no se encuentra registrado o has escrito mal el nombre y celular.")
                 self.alerta.setStandardButtons(QMessageBox.Ok)
                 self.alerta.exec_()
+
 
 
 
