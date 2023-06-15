@@ -1,3 +1,4 @@
+import random
 import sys
 
 from PyQt5 import QtGui
@@ -91,10 +92,34 @@ class RealizarPedido(QMainWindow):
         self.formularioDatosPedido = QFormLayout()
         self.datosCliente.setLayout(self.formularioDatosPedido)
 
+        # creamos el letrero Codigo de Pedido:
+        self.codigoPedido = QLabel()
+        # texto de letrero
+        self.codigoPedido.setText("Codigo del Pedido:")
+        # tipo de letra del letrero
+        self.codigoPedido.setFont(QFont("Arial", 15))
+        # le ponemos los estilos
+        self.codigoPedido.setStyleSheet("background-color: #61433f; margin-left: 20px;"
+                                          "margin-right: 10px ;color: #FFFFFF; border: solid;"
+                                          "border-width: 1px; border-color: #000000;"
+                                          "border-radius: 7px;margin-bottom: 5px;")
+        self.codigoPedido.setAlignment(Qt.AlignCenter)
+        self.codigoPedido.setFixedWidth(200)
+
+        self.codigoPedidoN = QLabel()
+        self.codigoPedidoN .setText(str(random.randint(1, 999)))
+        self.codigoPedidoN.setFixedWidth(250)
+        self.codigoPedidoN.setStyleSheet("background-color: #FFFFFF; margin-left: 20px;"
+                                          "margin-right: 10px ;color: #61433f; border: solid;"
+                                          "border-width: 1px; border-color: #000000;"
+                                          "border-radius: 7px;margin-bottom: 10px;")
+
+        self.formularioDatosPedido.addRow(self.codigoPedido, self.codigoPedidoN)
+
         # creamos el letrero nombre del cliente
         self.letreroCliente = QLabel()
         # texto de letrero
-        self.letreroCliente.setText("Cliente")
+        self.letreroCliente.setText("Nombre:")
         # tipo de letra del letrero
         self.letreroCliente.setFont(QFont("Arial", 15))
         # le ponemos los estilos
@@ -108,7 +133,10 @@ class RealizarPedido(QMainWindow):
         # creamos el campo para el nombre del cliente
         self.nombreCliente = QLineEdit()
         self.nombreCliente.setFixedWidth(250)
-        self.nombreCliente.setStyleSheet("background-color: #ffffff")
+        self.nombreCliente.setStyleSheet("background-color: #FFFFFF; margin-left: 20px;"
+                                          "margin-right: 10px ;color: #61433f; border: solid;"
+                                          "border-width: 1px; border-color: #000000;"
+                                          "border-radius: 7px;margin-bottom: 5px;")
 
         # agregamos el letrero al layout formularioDatosPedido
         self.formularioDatosPedido.addRow(self.letreroCliente, self.nombreCliente)
@@ -116,7 +144,7 @@ class RealizarPedido(QMainWindow):
         # creamos el letrero telefono del cliente
         self.letreroCelular = QLabel()
         # texto de letrero
-        self.letreroCelular.setText("Celular")
+        self.letreroCelular.setText("Celular:")
         # tipo de letra del letrero
         self.letreroCelular.setFont(QFont("Arial", 15))
         # le ponemos los estilos
@@ -130,7 +158,10 @@ class RealizarPedido(QMainWindow):
         # creamos el campo para el celular del cliente
         self.celularCliente = QLineEdit()
         self.celularCliente.setFixedWidth(250)
-        self.celularCliente.setStyleSheet("background-color: #ffffff")
+        self.celularCliente.setStyleSheet("background-color: #FFFFFF; margin-left: 20px;"
+                                          "margin-right: 10px ;color: #61433f; border: solid;"
+                                          "border-width: 1px; border-color: #000000;"
+                                          "border-radius: 7px;margin-bottom: 5px;")
 
         # agregamos el letrero al layout formularioDatosPedido
         self.formularioDatosPedido.addRow(self.letreroCelular, self.celularCliente)
@@ -512,14 +543,22 @@ class RealizarPedido(QMainWindow):
                     print("el cliente existe")
                     pedido =[]
 
-                    p = Pedido(c.nombreCompleto, c.direccion, c.celular, self.cantidadProducto1.text(), self.cantidadProducto2.text(), self.cantidadProducto3.text(), "pendiente")
+                    p = Pedido(self.codigoPedidoN.text(), c.nombreCompleto, c.direccion, c.celular, self.cantidadProducto1.text(), self.cantidadProducto2.text(), self.cantidadProducto3.text(), "pendiente")
                     print(p)
                     pedido.append(p)
 
                     self.file = open('archivos_planos/pedidos.txt', 'ab')
                     for p in pedido:
-                        self.file.write(bytes(p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
+                        self.file.write(bytes(p.codigoPedido + ";" + p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
                     self.file.close()
+
+                    self.codigoPedidoN.setText(str(random.randint(1, 999)))
+                    self.nombreCliente.setText("")
+                    self.celularCliente.setText("")
+                    self.cantidadProducto1.setText("0")
+                    self.cantidadProducto2.setText("0")
+                    self.cantidadProducto3.setText("0")
+
                     return QMessageBox.question(self,
                                                 'Confirmacion',
                                                 'Se ha guardado el pedido exitosamente.',
