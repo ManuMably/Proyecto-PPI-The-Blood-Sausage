@@ -269,6 +269,8 @@ class GestionClientes(QMainWindow):
             # hacemos que la ventana de dialogo se vea
             self.ventanaDialogo.exec_()
 
+            self.accion_botonVolver()
+
         # validar si el documento es numerico
         if (not self.cedulaCliente.text().isnumeric()):
             self.datosCorrectos = False
@@ -281,8 +283,7 @@ class GestionClientes(QMainWindow):
             # hacemos que la ventana de dialogo se vea
             self.ventanaDialogo.exec_()
 
-            # limpiamos los campos del documento
-            self.cedulaCliente.setText('')
+            self.accion_botonVolver()
 
         # si los datos estan correctos
         if (self.datosCorrectos):
@@ -352,6 +353,8 @@ class GestionClientes(QMainWindow):
                 # hacemos que la ventana de dialogo se vea
                 self.ventanaDialogo.exec_()
 
+                self.accion_botonVolver()
+
     def accion_editarCliente(self):
 
         # variable para controlar que se han ingresado datos correctos
@@ -375,6 +378,8 @@ class GestionClientes(QMainWindow):
 
             # para que se vea ventalaDialogo
             self.ventanaDialogo.exec_()
+
+            self.accion_botonVolver()
 
         # si los datos estan correctos
         if self.datosCorrectos:
@@ -461,10 +466,7 @@ class GestionClientes(QMainWindow):
                 # hacemos que la ventana de dialogo se vea
                 self.ventanaDialogo.exec_()
 
-                self.cedulaCliente.setText('')
-                self.nombreCliente.setText('')
-                self.direccionCliente.setText('')
-                self.celularCliente.setText('')
+                self.accion_botonVolver()
 
     def accion_eliminarCliente(self):
 

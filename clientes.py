@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QWidget, QScrollArea, Q
 
 from cliente import Cliente
 from gestionClientes import GestionClientes
+from listadoClientes import ListadoClientes
 
 class Clientes(QMainWindow):
 
@@ -159,7 +160,7 @@ class Clientes(QMainWindow):
         self.letreroCelular.setStyleSheet("background-color: #61433f; margin-left: 20px;"
                                           "margin-right: 10px ;color: #FFFFFF; border: solid;"
                                           "border-width: 1px; border-color: #000000;"
-                                          "border-radius: 7px;margin-bottom: 5px; margin-bottom: 50px;")
+                                          "border-radius: 7px;margin-bottom: 5px; margin-bottom: 30px;")
         self.letreroCelular.setAlignment(Qt.AlignCenter)
         self.letreroCelular.setFixedWidth(200)
 
@@ -193,14 +194,22 @@ class Clientes(QMainWindow):
         self.formularioRegistro.addRow(self.botonRegistrar, self.botonLimpiar)
 
         # hacemos un boton para gestion de clientes
-        self.gestionarClientes = QPushButton("Gestionar Clientes")
-        self.gestionarClientes.setFixedWidth(270)
+        self.gestionarClientes = QPushButton("Gestionar\nClientes")
+        self.gestionarClientes.setFixedWidth(200)
         self.gestionarClientes.setStyleSheet(
-            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 20px; margin-bottom: 30px;")
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 20px; margin-bottom: 20px;")
         self.gestionarClientes.setFont(QFont("Arial", 15))
         self.gestionarClientes.clicked.connect(self.accion_gestionarClientes)
 
-        self.formularioRegistro.addRow(self.gestionarClientes)
+        # hacemos un boton para gestion de clientes
+        self.listadoClientes = QPushButton("Listado de\nClientes")
+        self.listadoClientes.setFixedWidth(200)
+        self.listadoClientes.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 20px; margin-bottom: 20px;")
+        self.listadoClientes.setFont(QFont("Arial", 15))
+        self.listadoClientes.clicked.connect(self.accion_listadoClientes)
+
+        self.formularioRegistro.addRow(self.gestionarClientes, self.listadoClientes)
 
         # agregamos el formulario al layout vertical
         self.verticalCentral.addLayout(self.formularioRegistro)
@@ -336,6 +345,11 @@ class Clientes(QMainWindow):
         self.hide()
         self.gentionClientes = GestionClientes(self)
         self.gentionClientes.show()
+
+    def accion_listadoClientes(self):
+        self.hide()
+        self.listadoClientes = ListadoClientes(self)
+        self.listadoClientes.show()
 
 
 if __name__ == '__main__':
