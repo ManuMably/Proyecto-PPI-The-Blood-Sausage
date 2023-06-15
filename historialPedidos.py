@@ -161,7 +161,7 @@ class VentanaHistorialPedidos(QMainWindow):
         self.tabla.setColumnWidth(8, 230)
 
         # Definimos el texto de la cabecera:
-        self.tabla.setHorizontalHeaderLabels(['Codigo Pedido', 'Cedula', 'Nombre',
+        self.tabla.setHorizontalHeaderLabels(['Codigo Pedido', 'Nombre', 'Cedula',
                                               'Direccion',
                                               'Celular',
                                               'Cantidad Morcilla',
