@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, \
     QWidget, QFormLayout, QLineEdit, QScrollArea, QTableWidget, QTableWidgetItem, QMessageBox
 
+from buscadorPedidos import BuscadorPedidos
 from pedido import Pedido
 
 
@@ -14,6 +15,8 @@ class VentanaHistorialPedidos(QMainWindow):
         super(VentanaHistorialPedidos, self).__init__(anterior)
 
         self.ventanaAnterior = anterior
+
+        self.pedidoBusqueda = ""
 
         # titulo de la ventana
         self.setWindowTitle("Historial Pedidos")
@@ -104,12 +107,12 @@ class VentanaHistorialPedidos(QMainWindow):
 
             linea = self.file.readline().decode('UTF-8')
 
-            # obtenemos del string una lista con 11 datos separados por;
+            # obtenemos del string una lista con 9 datos separados por;
             lista = linea.split(";")
             # Separa si ya no hay mas registros en el archivo
             if linea == '':
                 break
-            # Creamos un objeto tipo cliente llamado u
+            # Creamos un objeto tipo Pedido llamado p
             p = Pedido(
                 lista[0],
                 lista[1],
@@ -221,6 +224,16 @@ class VentanaHistorialPedidos(QMainWindow):
         # lo agregamos
         self.layoutBloqueBotones.addWidget(self.botonEliminar)
 
+        # boton Refrescar
+        self.botonRefrescar = QPushButton("Refrescar")
+        self.botonRefrescar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 20px;")
+        self.botonRefrescar.setFont(QFont("Arial", 15))
+        # ponemos el boton Eliminar a funcionar
+        self.botonRefrescar.clicked.connect(self.accion_botonRefrescar)
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonRefrescar)
+
         # agragamos el bloque de botones a la vertical central
         self.verticalPrincipal.addWidget(self.bloqueBotones)
 
@@ -251,12 +264,12 @@ class VentanaHistorialPedidos(QMainWindow):
         self.ingresoCodigoBuscador.setAlignment(Qt.AlignHCenter)
         self.verticalPrincipal.addWidget(self.ingresoCodigoBuscador)
 
-        # boton Cuscar
+        # boton buscar
         self.botonBuscar = QPushButton("Buscar")
         self.botonBuscar.setStyleSheet("border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 400px; margin-right: 400px; margin-bottom: 20px;")
         self.botonBuscar.setFont(QFont("Arial", 15))
-        # ponemos el boton actualizar a funcionar
-        #self.botonCambiar.clicked.connect(self.accion_insert)
+        # ponemos el boton buscar a funcionar
+        self.botonBuscar.clicked.connect(self.accion_botonBuscar)
         # lo agregamos
         self.verticalPrincipal.addWidget(self.botonBuscar)
 
@@ -267,6 +280,74 @@ class VentanaHistorialPedidos(QMainWindow):
 
         # establecemos el verticalPrincipal como layout de la ventana
         self.fondo.setLayout(self.verticalPrincipal)
+
+    def accion_botonRefrescar(self):
+        self.fondo.update()
+        print("post")
+    def accion_botonBuscar(self):
+        print("presionado")
+        # Abrimos el archivo en modo de lectura:
+        self.file = open('archivos_planos/pedidos.txt', 'rb')
+
+        # lista vacia para guardar los usuarios:
+        self.pedidos2 = []
+
+        # recorremos el archivo, linea por linea:
+        while self.file:
+
+            linea = self.file.readline().decode('UTF-8')
+
+            # obtenemos del string una lista con 9 datos separados por;
+            lista = linea.split(";")
+            # Separa si ya no hay mas registros en el archivo
+            if linea == '':
+                break
+            # Creamos un objeto tipo Pedido llamado p
+            p = Pedido(
+                lista[0],
+                lista[1],
+                lista[2],
+                lista[3],
+                lista[4],
+                lista[5],
+                lista[6],
+                lista[7],
+                lista[8]
+            )
+            # Metemos el objeto en la lista de usuarios:
+            self.pedidos2.append(p)
+
+        # Cerramos el archivo:
+        self.file.close()
+
+        # En este punto tenemos la lista pedidos con todos los pedidos
+
+        #bandera para controlar si no se encontro el pedido
+        self.banderaPedidoBusqueda = False
+
+        # Recorremos la lista de pedidos
+
+        for p in self.pedidos2:
+            # buscamos el usuario por el nombre:
+            if (p.codigoPedido == self.ingresoCodigoBuscador.text()):
+                self.pedidoBusqueda = self.ingresoCodigoBuscador.text()
+                print(self.pedidoBusqueda)
+                self.banderaPedidoBusqueda = True
+                self.ingresoCodigoBuscador.setText("")
+
+                self.hide()
+                self.buscadorPedidos = BuscadorPedidos(self)
+                self.buscadorPedidos.show()
+
+                # paramos el for:
+                break
+        if not self.banderaPedidoBusqueda:
+            return QMessageBox.warning(self, 'Alerta', 'no se encontro el codigo de pedido')
+
+
+
+
+
 
     def accion_botonVolver(self):
             self.hide()
@@ -437,7 +518,7 @@ class VentanaHistorialPedidos(QMainWindow):
             # si los datos son diferentes a lo que existe:
             if not existeRegistro:
 
-                # Recorre la lista de usuarios
+                # Recorre la lista de pedidos
                 for p in pedidos:
                     # comparamo todos los datos del registro ingresado ocn el documento:
                     if (p.codigoPedido == self.tabla.item(filaActual, 0).text()):
