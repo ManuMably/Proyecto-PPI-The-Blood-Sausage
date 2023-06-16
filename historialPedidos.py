@@ -224,16 +224,6 @@ class VentanaHistorialPedidos(QMainWindow):
         # lo agregamos
         self.layoutBloqueBotones.addWidget(self.botonEliminar)
 
-        # boton Refrescar
-        self.botonRefrescar = QPushButton("Refrescar")
-        self.botonRefrescar.setStyleSheet(
-            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 20px;")
-        self.botonRefrescar.setFont(QFont("Arial", 15))
-        # ponemos el boton Eliminar a funcionar
-        self.botonRefrescar.clicked.connect(self.accion_botonRefrescar)
-        # lo agregamos
-        self.layoutBloqueBotones.addWidget(self.botonRefrescar)
-
         # agragamos el bloque de botones a la vertical central
         self.verticalPrincipal.addWidget(self.bloqueBotones)
 
@@ -281,9 +271,7 @@ class VentanaHistorialPedidos(QMainWindow):
         # establecemos el verticalPrincipal como layout de la ventana
         self.fondo.setLayout(self.verticalPrincipal)
 
-    def accion_botonRefrescar(self):
-        self.fondo.update()
-        print("post")
+
     def accion_botonBuscar(self):
         print("presionado")
         # Abrimos el archivo en modo de lectura:
