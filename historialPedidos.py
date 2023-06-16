@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, \
     QWidget, QFormLayout, QLineEdit, QScrollArea, QTableWidget, QTableWidgetItem, QMessageBox
 
+from buscadorPedidos import BuscadorPedidos
 from pedido import Pedido
 
 
@@ -14,6 +15,8 @@ class VentanaHistorialPedidos(QMainWindow):
         super(VentanaHistorialPedidos, self).__init__(anterior)
 
         self.ventanaAnterior = anterior
+
+        self.pedidoBusqueda = ""
 
         # titulo de la ventana
         self.setWindowTitle("Historial Pedidos")
@@ -104,12 +107,12 @@ class VentanaHistorialPedidos(QMainWindow):
 
             linea = self.file.readline().decode('UTF-8')
 
-            # obtenemos del string una lista con 11 datos separados por;
+            # obtenemos del string una lista con 9 datos separados por;
             lista = linea.split(";")
             # Separa si ya no hay mas registros en el archivo
             if linea == '':
                 break
-            # Creamos un objeto tipo cliente llamado u
+            # Creamos un objeto tipo Pedido llamado p
             p = Pedido(
                 lista[0],
                 lista[1],
@@ -118,7 +121,8 @@ class VentanaHistorialPedidos(QMainWindow):
                 lista[4],
                 lista[5],
                 lista[6],
-                lista[7]
+                lista[7],
+                lista[8]
             )
             # Metemos el objeto en la lista de usuarios:
             self.pedidos.append(p)
@@ -146,7 +150,7 @@ class VentanaHistorialPedidos(QMainWindow):
         self.tabla = QTableWidget()
 
         # definimos el numero de columnas que tendra la tabla:
-        self.tabla.setColumnCount(8)
+        self.tabla.setColumnCount(9)
 
         # definimos el ancho de cada columna:
         self.tabla.setColumnWidth(0, 100)
@@ -157,15 +161,16 @@ class VentanaHistorialPedidos(QMainWindow):
         self.tabla.setColumnWidth(5, 230)
         self.tabla.setColumnWidth(6, 230)
         self.tabla.setColumnWidth(7, 230)
+        self.tabla.setColumnWidth(8, 230)
 
         # Definimos el texto de la cabecera:
-        self.tabla.setHorizontalHeaderLabels(['Codigo Pedido', 'Nombre',
+        self.tabla.setHorizontalHeaderLabels(['Codigo Pedido', 'Nombre', 'Cedula',
                                               'Direccion',
                                               'Celular',
                                               'Cantidad Morcilla',
                                               'Cantidad Chorizo',
                                               'Cantidad Arroz',
-                                              'Estado del Pedido'])
+                                              'Estado del Pedido',])
 
         # Establecemos el numero de filas:
         self.tabla.setRowCount(self.numeroPedidos)
@@ -174,12 +179,13 @@ class VentanaHistorialPedidos(QMainWindow):
         for p in self.pedidos:
             self.tabla.setItem(self.contador, 0, QTableWidgetItem(p.codigoPedido))
             self.tabla.setItem(self.contador, 1, QTableWidgetItem(p.nombreCliente))
-            self.tabla.setItem(self.contador, 2, QTableWidgetItem(p.direccion))
-            self.tabla.setItem(self.contador, 3, QTableWidgetItem(p.celular))
-            self.tabla.setItem(self.contador, 4, QTableWidgetItem(p.morcillaCantidad))
-            self.tabla.setItem(self.contador, 5, QTableWidgetItem(p.chorizoCantidad))
-            self.tabla.setItem(self.contador, 6, QTableWidgetItem(p.arrozCantidad))
-            self.tabla.setItem(self.contador, 7, QTableWidgetItem(p.estadoPedido))
+            self.tabla.setItem(self.contador, 2, QTableWidgetItem(p.cedulaCliente))
+            self.tabla.setItem(self.contador, 3, QTableWidgetItem(p.direccion))
+            self.tabla.setItem(self.contador, 4, QTableWidgetItem(p.celular))
+            self.tabla.setItem(self.contador, 5, QTableWidgetItem(p.morcillaCantidad))
+            self.tabla.setItem(self.contador, 6, QTableWidgetItem(p.chorizoCantidad))
+            self.tabla.setItem(self.contador, 7, QTableWidgetItem(p.arrozCantidad))
+            self.tabla.setItem(self.contador, 8, QTableWidgetItem(p.estadoPedido))
             self.contador += 1
 
         # Aplicar hoja de estilo a la tabla
@@ -218,6 +224,16 @@ class VentanaHistorialPedidos(QMainWindow):
         # lo agregamos
         self.layoutBloqueBotones.addWidget(self.botonEliminar)
 
+        # boton Refrescar
+        self.botonRefrescar = QPushButton("Refrescar")
+        self.botonRefrescar.setStyleSheet(
+            "border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 50px; margin-right: 35px; margin-bottom: 20px;")
+        self.botonRefrescar.setFont(QFont("Arial", 15))
+        # ponemos el boton Eliminar a funcionar
+        self.botonRefrescar.clicked.connect(self.accion_botonRefrescar)
+        # lo agregamos
+        self.layoutBloqueBotones.addWidget(self.botonRefrescar)
+
         # agragamos el bloque de botones a la vertical central
         self.verticalPrincipal.addWidget(self.bloqueBotones)
 
@@ -248,12 +264,12 @@ class VentanaHistorialPedidos(QMainWindow):
         self.ingresoCodigoBuscador.setAlignment(Qt.AlignHCenter)
         self.verticalPrincipal.addWidget(self.ingresoCodigoBuscador)
 
-        # boton Cuscar
+        # boton buscar
         self.botonBuscar = QPushButton("Buscar")
         self.botonBuscar.setStyleSheet("border-radius: 10px; background-color: #515670;color: #ffffff; margin-left: 400px; margin-right: 400px; margin-bottom: 20px;")
         self.botonBuscar.setFont(QFont("Arial", 15))
-        # ponemos el boton actualizar a funcionar
-        #self.botonCambiar.clicked.connect(self.accion_insert)
+        # ponemos el boton buscar a funcionar
+        self.botonBuscar.clicked.connect(self.accion_botonBuscar)
         # lo agregamos
         self.verticalPrincipal.addWidget(self.botonBuscar)
 
@@ -264,6 +280,74 @@ class VentanaHistorialPedidos(QMainWindow):
 
         # establecemos el verticalPrincipal como layout de la ventana
         self.fondo.setLayout(self.verticalPrincipal)
+
+    def accion_botonRefrescar(self):
+        self.fondo.update()
+        print("post")
+    def accion_botonBuscar(self):
+        print("presionado")
+        # Abrimos el archivo en modo de lectura:
+        self.file = open('archivos_planos/pedidos.txt', 'rb')
+
+        # lista vacia para guardar los usuarios:
+        self.pedidos2 = []
+
+        # recorremos el archivo, linea por linea:
+        while self.file:
+
+            linea = self.file.readline().decode('UTF-8')
+
+            # obtenemos del string una lista con 9 datos separados por;
+            lista = linea.split(";")
+            # Separa si ya no hay mas registros en el archivo
+            if linea == '':
+                break
+            # Creamos un objeto tipo Pedido llamado p
+            p = Pedido(
+                lista[0],
+                lista[1],
+                lista[2],
+                lista[3],
+                lista[4],
+                lista[5],
+                lista[6],
+                lista[7],
+                lista[8]
+            )
+            # Metemos el objeto en la lista de usuarios:
+            self.pedidos2.append(p)
+
+        # Cerramos el archivo:
+        self.file.close()
+
+        # En este punto tenemos la lista pedidos con todos los pedidos
+
+        #bandera para controlar si no se encontro el pedido
+        self.banderaPedidoBusqueda = False
+
+        # Recorremos la lista de pedidos
+
+        for p in self.pedidos2:
+            # buscamos el usuario por el nombre:
+            if (p.codigoPedido == self.ingresoCodigoBuscador.text()):
+                self.pedidoBusqueda = self.ingresoCodigoBuscador.text()
+                print(self.pedidoBusqueda)
+                self.banderaPedidoBusqueda = True
+                self.ingresoCodigoBuscador.setText("")
+
+                self.hide()
+                self.buscadorPedidos = BuscadorPedidos(self)
+                self.buscadorPedidos.show()
+
+                # paramos el for:
+                break
+        if not self.banderaPedidoBusqueda:
+            return QMessageBox.warning(self, 'Alerta', 'no se encontro el codigo de pedido')
+
+
+
+
+
 
     def accion_botonVolver(self):
             self.hide()
@@ -317,6 +401,7 @@ class VentanaHistorialPedidos(QMainWindow):
                         lista[5],
                         lista[6],
                         lista[7],
+                        lista[8]
                     )
                     # metemos el objeto en la lista de usuarios:
                     pedidos.append(p)
@@ -345,7 +430,7 @@ class VentanaHistorialPedidos(QMainWindow):
                 # recorremos la lista de usuarios
                 # para guardar usuario por usuario en el archivo
                 for p in pedidos:
-                    self.file.write(bytes(p.codigoPedido + ";" + p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
+                    self.file.write(bytes(p.codigoPedido + ";" + p.cedulaCliente.strip() + ";" + p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
                 self.file.close()
 
                 # Hacemos que en la tabla no se vea el registro:
@@ -411,7 +496,8 @@ class VentanaHistorialPedidos(QMainWindow):
                         lista[4],
                         lista[5],
                         lista[6],
-                        lista[7]
+                        lista[7],
+                        lista[8]
                     )
                     # metemos el objeto en la lista de usuarios:
                     pedidos.append(p)
@@ -432,7 +518,7 @@ class VentanaHistorialPedidos(QMainWindow):
             # si los datos son diferentes a lo que existe:
             if not existeRegistro:
 
-                # Recorre la lista de usuarios
+                # Recorre la lista de pedidos
                 for p in pedidos:
                     # comparamo todos los datos del registro ingresado ocn el documento:
                     if (p.codigoPedido == self.tabla.item(filaActual, 0).text()):
@@ -442,12 +528,13 @@ class VentanaHistorialPedidos(QMainWindow):
                         # Volvemos a actualizar todos los datos del usuario:
                         p.codigoPedido = self.tabla.item(filaActual, 0).text()
                         p.nombreCliente = self.tabla.item(filaActual, 1).text()
-                        p.direccion = self.tabla.item(filaActual, 2).text()
-                        p.celular = self.tabla.item(filaActual,3).text()
-                        p.morcillaCantidad = self.tabla.item(filaActual, 4).text()
-                        p.chorizoCantidad = self.tabla.item(filaActual, 5).text()
-                        p.arrozCantidad = self.tabla.item(filaActual, 6).text()
-                        p.estadoPedido = self.tabla.item(filaActual, 7).text()
+                        p.cedulaCliente = self.tabla.item(filaActual,2).text()
+                        p.direccion = self.tabla.item(filaActual, 3).text()
+                        p.celular = self.tabla.item(filaActual,4).text()
+                        p.morcillaCantidad = self.tabla.item(filaActual, 5).text()
+                        p.chorizoCantidad = self.tabla.item(filaActual, 6).text()
+                        p.arrozCantidad = self.tabla.item(filaActual, 7).text()
+                        p.estadoPedido = self.tabla.item(filaActual, 8).text()
 
                         # abrimos el archivo en modo escritura escribiendo datos en binario.
                         self.file = open('archivos_planos/clientes.txt', 'wb')
@@ -455,7 +542,7 @@ class VentanaHistorialPedidos(QMainWindow):
                         # recorremos la lista de usuarios
                         # para guardar usuario por usuario en el archivo
                         for p in pedidos:
-                            self.file.write(bytes(p.codigoPedido + ";" + p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
+                            self.file.write(bytes(p.codigoPedido + ";" + p.nombreCliente + ";" + p.cedulaCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
 
                         self.file.close()
 

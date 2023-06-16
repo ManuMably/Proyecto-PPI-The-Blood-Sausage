@@ -180,7 +180,7 @@ class RealizarPedido(QMainWindow):
 
         self.botonlimpiar.setFont(QFont("Arial", 15))
 
-        self.botonlimpiar.clicked.connect(self.accion_botonlimpiar)
+        #self.botonlimpiar.clicked.connect(self.accion_botonlimpiar)
 
         self.formularioDatosPedido.addRow(self.botonlimpiar)
 
@@ -525,7 +525,7 @@ class RealizarPedido(QMainWindow):
                     break
 
                 # creamos un objeto tipo cliente llamado c
-                c = Cliente(lista[0], lista[1], lista[2])
+                c = Cliente(lista[0], lista[1], lista[2], lista[3])
 
                 # metemos el objeto en la lista clientes
                 clientes.append(c)
@@ -543,13 +543,13 @@ class RealizarPedido(QMainWindow):
                     print("el cliente existe")
                     pedido =[]
 
-                    p = Pedido(self.codigoPedidoN.text(), c.nombreCompleto, c.direccion, c.celular, self.cantidadProducto1.text(), self.cantidadProducto2.text(), self.cantidadProducto3.text(), "pendiente")
+                    p = Pedido(self.codigoPedidoN.text(), c.cedula, c.nombreCompleto, c.direccion, c.celular, self.cantidadProducto1.text(), self.cantidadProducto2.text(), self.cantidadProducto3.text(), "pendiente")
                     print(p)
                     pedido.append(p)
 
                     self.file = open('archivos_planos/pedidos.txt', 'ab')
                     for p in pedido:
-                        self.file.write(bytes(p.codigoPedido + ";" + p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
+                        self.file.write(bytes(p.codigoPedido + ";" + p.cedulaCliente.strip() + ";" + p.nombreCliente + ";" + p.direccion.strip() + ";" + p.celular.strip() + ";" + p.morcillaCantidad.strip() + ";" + p.chorizoCantidad.strip() + ";" + p.arrozCantidad.strip() + ";" + p.estadoPedido.strip() + "\n", encoding='UTF-8'))
                     self.file.close()
 
                     self.codigoPedidoN.setText(str(random.randint(1, 999)))

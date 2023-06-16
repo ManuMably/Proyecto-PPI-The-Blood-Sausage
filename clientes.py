@@ -277,6 +277,7 @@ class Clientes(QMainWindow):
 
             # hacemos que la ventana de dialogo se vea
             self.ventanaDialogo.exec_()
+            self.accion_botonVolver()
 
             self.cedulaCliente.setText('')
             self.nombreCliente.setText('')
@@ -294,6 +295,7 @@ class Clientes(QMainWindow):
 
             # hacemos que la ventana de dialogo se vea
             self.ventanaDialogo.exec_()
+            self.accion_botonVolver()
 
             self.cedulaCliente.setText('')
             self.celularCliente.setText('')
@@ -317,6 +319,7 @@ class Clientes(QMainWindow):
 
             # hacemos que la ventana de dialogo se vea
             self.ventanaDialogo.exec_()
+            self.accion_botonVolver()
 
             self.cedulaCliente.setText('')
             self.nombreCliente.setText('')
